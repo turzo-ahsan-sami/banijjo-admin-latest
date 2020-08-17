@@ -1,0 +1,30 @@
+Banijjo:
+1) User Registration Problem (Remove all required Fields) [Done]
+2) Forget password (admin & front)
+3) user Profile page & update (Front)
+4) user name need to appear in the home page in the replacement of account and welcome to banijjo (front)
+5) feature category need to be show in the home page (front)
+6) image of the feature category parent (admin)
+7) SEO links (front)
+8) image can’t be download (front)
+9) help, terms & condition, privacy & policy, FAQ, Buyer Protection (admin, front)
+10) News, Blog (customer & admin) (front, admin)
+11) customer review (front, admin)
+13/07/2020=>
+12) vendor logo 1:1 or 2:1 and banner 9:3 and profile picture 1:1
+13) banner image ratio issue for front end
+14) vendor registration: website/fb page link [Done]
+15) feature category effective date. [Done]
+16) side and top navbar category effective date [Done]
+17) need to insert and check who inserted the product, purchase, purchase return, stock. (Ali Sir)
+18) need required the color info at the time of product entry if user choose a color.
+19) profile image to picture, Shop/Brand Image to logo
+20) Vendor all image (Like: banner, products, profile, brand logo) can be delete by admin.
+21) vendor can purchase own or other 3rd party supplier.
+22) Product info and Purchase info.
+23) Stock Info (With new purchase from vendor).
+24) If product returned from the customer need to add a note section which will deliver to banijjo admin.
+25)  at the time of product entry, can’t create new line in the description and need the text area like doc file.
+26) vendor can entry the child category but has to select the parent’s category.
+27) global specification system.
+28) recaptcha
