@@ -1,0 +1,6 @@
+{
+  "name": "Add Navbar Category Order",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./CategoryOrder.js"
+}

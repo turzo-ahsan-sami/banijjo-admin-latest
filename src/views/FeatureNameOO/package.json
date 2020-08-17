@@ -1,0 +1,6 @@
+{
+  "name": "FeatureName",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./FeatureName.js"
+}

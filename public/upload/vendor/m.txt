@@ -1,0 +1,99 @@
+Login ID #super_admin
+Customer ID #2
+admin@mysmsworld.in
+
+
+
+ID	DND Title	    DBType	Host Name	DB Name	Username	Password	        Table Name	      Column Name	  Status	ACTIONS
+1	Manual Block	mysql	localhost	vps29	root	    xLJ26r5DyXaH9e32	sys_contactlist	  contactnumber	  ACTIVE	
+
+
+
+
+group=smsc
+smsc=smpp
+smsc-id=TRANSACTIONAL-61
+allowed-smsc-id = TRANSACTIONAL-61
+host = api.rmlconnect.net
+port = 2345
+transceiver-mode =  1
+receive-port = 2345
+log-file = "/home/vps29/kannel/config/TRANSACTIONAL-61.log"
+log-level = 3
+#alt-charset = "UTF-8"
+smsc-username = aliveint
+smsc-password = ShPlR7rg
+msg-id-type = 0x00
+source-addr-ton = 0
+source-addr-npi = 1
+dest-addr-ton = 1
+dest-addr-npi = 1
+enquire-link-interval = 180
+system-type = SMPP
+reconnect-delay = 10
+
+group=smsc
+smsc=smpp
+smsc-id=TRANSACTIONAL-61
+allowed-smsc-id = TRANSACTIONAL-61
+host = api.rmlconnect.net
+port = 2345
+transceiver-mode =  1
+receive-port = 2345
+log-file = "/home/vps29/kannel/config/TRANSACTIONAL-61.log"
+log-level = 3
+#alt-charset = "UTF-8"
+smsc-username = aliveint
+smsc-password = ShPlR7rg
+msg-id-type = 0x00
+source-addr-ton = 0
+source-addr-npi = 1
+dest-addr-ton = 1
+dest-addr-npi = 1
+enquire-link-interval = 180
+system-type = SMPP
+reconnect-delay = 10
+
+group=smsc
+smsc=smpp
+smsc-id=TRANSACTIONAL-61
+allowed-smsc-id = TRANSACTIONAL-61
+host = api.rmlconnect.net
+port = 2345
+transceiver-mode =  1
+receive-port = 2345
+log-file = "/home/vps29/kannel/config/TRANSACTIONAL-61.log"
+log-level = 3
+#alt-charset = "UTF-8"
+smsc-username = aliveint
+smsc-password = ShPlR7rg
+msg-id-type = 0x00
+source-addr-ton = 0
+source-addr-npi = 1
+dest-addr-ton = 1
+dest-addr-npi = 1
+enquire-link-interval = 180
+system-type = SMPP
+reconnect-delay = 10
+
+group=smsc
+smsc=smpp
+smsc-id=TRANSACTIONAL-61
+allowed-smsc-id = TRANSACTIONAL-61
+host = api.rmlconnect.net
+port = 2345
+transceiver-mode =  1
+receive-port = 2345
+log-file = "/home/vps29/kannel/config/TRANSACTIONAL-61.log"
+log-level = 3
+#alt-charset = "UTF-8"
+smsc-username = aliveint
+smsc-password = ShPlR7rg
+msg-id-type = 0x00
+source-addr-ton = 0
+source-addr-npi = 1
+dest-addr-ton = 1
+dest-addr-npi = 1
+enquire-link-interval = 180
+system-type = SMPP
+reconnect-delay = 10

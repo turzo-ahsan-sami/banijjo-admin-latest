@@ -1,0 +1,6 @@
+{
+  "name": "Discounts",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Discounts.js"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "PurchaseReturn",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./PurchaseReturn.js"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Add Feture Category Order",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./FeturedCategory.js"
+}

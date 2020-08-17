@@ -1,0 +1,24 @@
+
+.sidebar .nav-link:hover {
+  background-color: #009345 !important;
+  color: white !important;
+}
+
+.nav-icon {
+  color: #009345 !important;
+}
+
+.sidebar .nav-link:hover > .nav-icon  {
+  color: white !important;
+}
+
+@media (min-width: 992px) {
+  
+  .nav-dropdown-items {
+    background-color: #2f353a !important;
+  }
+  .sidebar-minimized .sidebar .nav-item:hover > .nav-link {
+    background: #009345 !important;
+  }
+
+}

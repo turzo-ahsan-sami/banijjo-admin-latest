@@ -1,0 +1,6 @@
+{
+  "name": "BannerProducts",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./BannerProducts.js"
+}

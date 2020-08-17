@@ -1,0 +1,6 @@
+{
+  "name": "Add Advertisement",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Advertisement.js"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ProductSpecificationDetails",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ProductSpecificationDetails.js"
+}

@@ -1,0 +1,8 @@
+File from: [D:\Banijjo\banijjo-admin\server/../public/upload/product/productImages/1200px-Image_created_with_a_mobile_phone_2240x1680.png]
+
+File to: [D:\Banijjo\banijjo-admin\server/../public/upload/product/compressedProductImages/1200px-Image_created_with_a_mobile_phone_2240x1680.png]
+
+Compression algorithm: [pngquant]
+
+Description: Error: Command failed: D:\Banijjo\banijjo-admin\node_modules\pngquant-bin\vendor\pngquant.exe --quality=20-50 -o D:\Banijjo\banijjo-admin\server/../public/upload/product/compressedProductImages/1200px-Image_created_with_a_mobile_phone_2240x1680.png D:\Banijjo\banijjo-admin\server/../public/upload/product/productImages/1200px-Image_created_with_a_mobile_phone_2240x1680.png
+  error: failed writing image to D:\Banijjo\banijjo-admin\server/../public/upload/product/compressedProductImages/1200px-Image_created_with_a_mobile_phone_2240x1680.png (16)
