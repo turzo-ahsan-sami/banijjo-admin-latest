@@ -129,7 +129,7 @@ class Products extends Component {
       this.props.history.push("/login");
     }
 
-    fetch('http://admin.banijjo.com.bd:3002/api/categories', {
+    fetch('http://store.banijjo.com.bd:3002/api/categories', {
       method: 'GET'
     })
     .then(res => {
@@ -145,7 +145,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://admin.banijjo.com.bd:3002/api/product_specification_names', {
+    fetch('http://store.banijjo.com.bd:3002/api/product_specification_names', {
       method: 'GET'
     })
     .then(res => {
@@ -162,7 +162,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://admin.banijjo.com.bd:3002/api/product_specification_details', {
+    fetch('http://store.banijjo.com.bd:3002/api/product_specification_details', {
       method: 'GET'
     })
     .then(res => {
@@ -179,7 +179,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://admin.banijjo.com.bd:3002/api/vendor_list_for_product', {
+    fetch('http://store.banijjo.com.bd:3002/api/vendor_list_for_product', {
       method: 'GET'
     })
     .then(res => {
@@ -202,7 +202,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://admin.banijjo.com.bd:3002/api/user_list', {
+    fetch('http://store.banijjo.com.bd:3002/api/user_list', {
       method: 'GET'
     })
     .then(res => {
@@ -223,7 +223,7 @@ class Products extends Component {
 
     console.log('Trying to fetch product !');
 
-    fetch(`http://admin.banijjo.com.bd:3002/api/product_list/?id=${this.state.userName}`, {
+    fetch(`http://store.banijjo.com.bd:3002/api/product_list/?id=${this.state.userName}`, {
       method: 'GET'
     })
     .then(res => {
@@ -305,7 +305,7 @@ class Products extends Component {
     //   2000
     // );
 
-    fetch('http://admin.banijjo.com.bd:3002/api/saveProduct' , {
+    fetch('http://store.banijjo.com.bd:3002/api/saveProduct' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json'

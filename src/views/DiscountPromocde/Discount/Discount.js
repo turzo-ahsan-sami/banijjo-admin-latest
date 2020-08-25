@@ -126,7 +126,7 @@ class Discount extends Component {
                     this.state.discountList.push(purchaseObject);
                 }
 
-                if (window.location.host == 'admin.banijjo.com.bd') {
+                if (window.location.host == 'store.banijjo.com.bd') {
                     this.setState({
                         dateFrom: discount.data[0].effective_from.split("T")[0],
                         dateTo: discount.data[0].effective_to.split("T")[0],

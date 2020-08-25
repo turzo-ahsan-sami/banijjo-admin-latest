@@ -63,19 +63,35 @@ var isNullOrEmpty = require('is-null-or-empty');
 
 app.use(session({ key: 'username', secret: 'ambalabanijjopluscom' }));
 
-const dbConnection = mysql.createConnection({
+// const dbConnection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: '',
+//   database: 'ecommerce',
+//   dateStrings:true
+// });
+
+// dbConnection.connect((err) => {
+//   if (err) {
+//     throw err;
+//   }
+//   console.log('Connected to database');
+// });
+
+const dbConnection = mysql.createPool({
+  connectionLimit : 10,
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'ecommerce',
+  database: 'microfin_ecommerce_3',
   dateStrings:true
 });
 
-dbConnection.connect((err) => {
+dbConnection.getConnection((err) => {
   if (err) {
     throw err;
   }
-  console.log('Connected to database');
+  console.log('Connected to database...');
 });
 
 const query = util.promisify(dbConnection.query).bind(dbConnection);
@@ -6967,8 +6983,19 @@ app.post('/api/saveSpecificationDetails', verifyToken, (req,res)=>{
 });
 
 // get sales data....
-app.get('/api/sales_info', async function (req,res){
 
+app.get('/api/get_sales_info/:id', async function (req,res){
+    const { id } = req.params;
+    try {
+        const get_salaes_info = await query (`SELECT * FROM sales WHERE id = ${id}`);
+        return res.send({success: true, sales: get_salaes_info});
+    } catch (e) {
+        return res.send({success: false, message: 'Something went wrong!', error: e});
+    }
+});
+
+app.get('/api/sales_info', async function (req,res){
+    console.log('api call check...');
     try {
         const get_salaes_info = await query ('SELECT * FROM sales WHERE softDel = 0 AND status = 1');
 
@@ -6986,9 +7013,10 @@ app.get('/api/sales_info', async function (req,res){
 app.get('/api/vendor_sales_info', async function (req,res){
 
     try {
-        const get_salaes_info = await query ('SELECT sales.id AS id, sales.sales_bill_no AS sales_bill_no, sales.sales_type, sales.sales_date AS sales_date, sales_details.sales_product_quantity AS total_sales_quantity, sales_details.total_amount AS total_sales_amount, sales_details.discounts_amount AS discount_amount, sales.isConfirmed AS isConfirmed, sales.isEMI AS isEMI FROM sales JOIN sales_details ON sales.id = sales_details.salesBillId JOIN products ON sales_details.productId = products.id WHERE sales.softDel = 0 AND sales.status = 1 AND sales.isConfirmed = 2 AND products.vendor_id = '+req.query.id+' AND entry_user_type = "vendor"');
+        //const get_salaes_info = await query ('SELECT sales.id AS id, sales.sales_bill_no AS sales_bill_no, sales.sales_type, sales.sales_date AS sales_date, sales_details.sales_product_quantity AS total_sales_quantity, sales_details.total_amount AS total_sales_amount, sales_details.discounts_amount AS discount_amount, sales.isConfirmed AS isConfirmed, sales.isEMI AS isEMI FROM sales JOIN sales_details ON sales.id = sales_details.salesBillId JOIN products ON sales_details.productId = products.id WHERE sales.softDel = 0 AND sales.status = 1 AND sales.isConfirmed = 2 AND products.vendor_id = '+req.query.id+' AND entry_user_type = "vendor"');
+        const get_salaes_info = await query ('SELECT sales.id AS id, sales.sales_bill_no AS sales_bill_no, sales.sales_type, sales.sales_date AS sales_date, sales_details.sales_product_quantity AS total_sales_quantity, sales_details.total_amount AS total_sales_amount, sales_details.discounts_amount AS discount_amount, sales.isConfirmed AS isConfirmed, sales.isEMI AS isEMI FROM sales JOIN sales_details ON sales.id = sales_details.salesBillId JOIN products ON sales_details.productId = products.id WHERE sales.softDel = 0 AND sales.status = 1 AND sales.isConfirmed = 2 AND products.vendor_id = '+req.query.id);
 
-        console.log('get_salaes_info : ', get_salaes_info);
+        console.log('get_salaes_info : ',req.query.id, get_salaes_info);
 
         const get_salaes_productid = await query ('SELECT productId FROM sales_details WHERE status = 1');
 
@@ -7001,6 +7029,16 @@ app.get('/api/vendor_sales_info', async function (req,res){
     } catch (e) {
         console.log('Error : ', e);
 
+        return res.send({success: false, message: 'Something went wrong!', error: e});
+    }
+});
+
+app.get('/api/vendor_sales_courier_info', async function (req,res){
+    try {
+        const get_salaes_info = await query ('SELECT sales.id AS id, sales.sales_bill_no AS sales_bill_no, sales.sales_type, sales.sales_date AS sales_date, sales_details.sales_product_quantity AS total_sales_quantity, sales_details.total_amount AS total_sales_amount, sales_details.discounts_amount AS discount_amount, sales_details.courier_partner, sales_details.courier_order_code, sales.isConfirmed AS isConfirmed, sales.isEMI AS isEMI FROM sales JOIN sales_details ON sales.id = sales_details.salesBillId JOIN products ON sales_details.productId = products.id WHERE sales.softDel = 0 AND sales.status = 1 AND sales_details.courier_order_code IS NOT NULL AND products.vendor_id = '+req.query.id);
+        const get_salaes_productid = await query ('SELECT productId FROM sales_details WHERE status = 1');
+        return res.send({success: true, sales: get_salaes_info});
+    } catch (e) {       
         return res.send({success: false, message: 'Something went wrong!', error: e});
     }
 });
@@ -7379,8 +7417,65 @@ app.get('/', async function (req,res){
     res.send('You find me!');
 });
 
-// var apps = https.createServer(credentials, app);
+
+/*
+* E-COURIER API | Turzo Ahsan Sami | 20 August 2020
+*/
+
+app.get("/api/getSaleProductCustomerDetails/:sales_id", async (req, res) => {
+  const { sales_id } = req.params;
+  try {
+    const sales_product_customer_details = await query(`
+      SELECT 
+      pd.id, pd.product_specification_name, 
+      sd.salesBillId, sd.customerId, sd.total_amount, sd.customer_payable_amount, sd.sales_product_quantity, sd.courier_order_code, 
+      cust.name, cust.email, cust.phone_number, cust.address, cust.city, cust.thana, cust.area, cust.zipcode
+      FROM products as pd
+      INNER JOIN sales_details as sd 
+      ON pd.id = sd.productId
+      INNER JOIN customers_address as cust
+      ON cust.id = sd.customerId
+      where sd.salesBillId=${sales_id} and sd.status=1;
+    `)
+    res.json(sales_product_customer_details);    
+  } catch (e) {
+    console.error(e.message);
+    res.send("Server Error");
+  }
+});
+
+app.get("/api/updateSalesDetailsForCourier/:sales_id/:order_id/:courier_partner", async (req, res) => {
+  const { sales_id, order_id, courier_partner } = req.params;
+  console.log('sales_id...', sales_id);
+  console.log('order_id...', order_id);
+  console.log('courier_partner...', courier_partner);
+  try {
+    updateSalesDetailsForCourier = await query(`
+      UPDATE sales_details 
+      SET courier_partner = '${courier_partner}', courier_order_code = '${order_id}'
+      WHERE salesBillId = ${sales_id}
+    `);
+    console.log(updateSalesDetailsForCourier)
+    return res.send({ success: true, message: 'success' });
+  } catch (e) {
+    console.error(e.message);
+    res.send("Server Error");
+  }
+});
+
+/*
+* New API Files
+*/
+
+const routes = require('./routes');
+app.use('/apiv2', routes);
 
 app.listen(3002, () =>
     console.log('Express server is running on localhost:3002')
 );
+
+// var apps = https.createServer(credentials, app);
+
+// apps.listen(3002, () =>
+//     console.log('Express server is running on localhost:3002')
+// );

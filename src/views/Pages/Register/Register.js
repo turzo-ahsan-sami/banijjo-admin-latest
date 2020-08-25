@@ -81,7 +81,7 @@ class Register extends Component {
       }
       else {
           this.setState({
-              message: 'Invalied!',
+              message: 'Invalid Email!',
               checkStatus: false
           })
       }

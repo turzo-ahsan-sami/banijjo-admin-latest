@@ -147,7 +147,7 @@ class Login extends Component {
     }
     else {
         this.setState({
-            message: 'Invalied!',
+            message: 'Invalid!',
             checkStatus: false
         })
     }

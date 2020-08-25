@@ -150,7 +150,7 @@ class BannerProducts extends Component {
             });
 
             setTimeout(() => {
-                if (window.location.host == 'admin.banijjo.com.bd') {
+                if (window.location.host == 'store.banijjo.com.bd') {
                     this.setState({
                         dateFrom: banner.data[0].effective_from.split("T")[0],
                         dateTo: banner.data[0].effective_to.split("T")[0],

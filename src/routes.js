@@ -72,6 +72,7 @@ const PurchaseReturn = React.lazy(() => import('./views/PurchaseReturn/PurchaseR
 // SALES INFORMATION IMPORT
 const SalesReturn = React.lazy(() => import('./views/SalesReturn/SalesReturn'));
 const Sales = React.lazy(() => import('./views/Sales/Sales'));
+const DeliveryStatus = React.lazy(() => import('./views/Sales/DeliveryStatus'));
 
 // FEATURE INFORMATION IMPORT
 const FeatureName = React.lazy(() => import('./views/FeatureName/FeatureName'));
@@ -131,6 +132,9 @@ const routes = [
   // PURCHASE ROUTE PATH
   { path: '/purchase/purchase', name: 'Purchase', component: Purchase },
   { path: '/purchase/purchase-return', name: 'Purchase', component: PurchaseReturn },
+
+  // SALES ROUTE PATH
+  { path: '/sales/delivery-status', name: 'Delivery Status', component: DeliveryStatus },
 
   // SALES ROUTE PATH
   { path: '/sales/sales', name: 'Sales Info', component: Sales },

@@ -26,8 +26,8 @@ import './AnchorTag.css'
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
-const isAuth = localStorage.user_status=="approved"?true:false;
-const waitingAuth = localStorage.user_status=="completed"?true:false;
+const isAuth = localStorage.user_status==="approved"?true:false;
+const waitingAuth = localStorage.user_status==="completed"?true:false;
 const userType = localStorage.user_type;
 const userStatus = localStorage.user_status;
 
@@ -65,13 +65,13 @@ class DefaultLayout extends Component {
             <AppSidebarForm />
             <Suspense>
               {
-                userType == 'super_admin'?
+                userType === 'super_admin'?
                 <AppSidebarNav navConfig={navigation} {...this.props} router={router}/>
                 :
-                userType == 'admin'?
+                userType === 'admin'?
                 <AppSidebarNav navConfig={navigation} {...this.props} router={router}/>
                 :
-                userType == 'admin_manager'?
+                userType === 'admin_manager'?
                 <AppSidebarNav navConfig={navigation} {...this.props} router={router}/>
                 :
                 <AppSidebarNav navConfig={navigationVendor} {...this.props} router={router}/>
@@ -84,13 +84,13 @@ class DefaultLayout extends Component {
             <AppBreadcrumb appRoutes={routes} router={router} className="homeTag"/>
             <Container fluid>
                 {
-                    isAuth == true ?
+                    isAuth === true ?
                         <Suspense fallback={this.loading()}>
                           <Switch>
                             {
                               routes.map((route, idx) => {
                                 // if(isAuth){
-                                  if (userType == 'super_admin' || userType == 'admin' || userType == 'admin_manager') {
+                                  if (userType === 'super_admin' || userType === 'admin' || userType === 'admin_manager') {
                                     return route.component ? (
 
                                       <Route
@@ -103,7 +103,7 @@ class DefaultLayout extends Component {
                                           )} />
                                     ) : (null);
                                   }
-                                  else if (userType == 'vendor' && userStatus == 'approved' && (route.name == 'Products' || route.name == 'Dashboard' || route.name == 'Purchase' || route.name == 'ProductSpecificationDetails' || route.name == 'User Profile' || route.name == 'Discount' || route.name == 'Sales Info')) {
+                                  else if (userType === 'vendor' && userStatus === 'approved' && (route.name === 'Products' || route.name === 'Dashboard' || route.name === 'Purchase' || route.name === 'ProductSpecificationDetails' || route.name === 'User Profile' || route.name === 'Discount' || route.name === 'Sales Info' ||  route.name === 'Delivery Status')) {
                                     return route.component ? (
 
                                       <Route
@@ -116,7 +116,7 @@ class DefaultLayout extends Component {
                                           )} />
                                     ) : (null);
                                   }
-                                  else if (userType == 'delivery_man' && (route.name == 'Dashboard')) {
+                                  else if (userType === 'delivery_man' && (route.name === 'Dashboard')) {
                                     return route.component ? (
 
                                       <Route
@@ -140,7 +140,7 @@ class DefaultLayout extends Component {
                       <Switch>
                             {
                                 routes.map((route, idx) => {
-                                  if (userType == 'vendor' && userStatus == 'completed' && route.name == 'DashboardInfo' ) {
+                                  if (userType === 'vendor' && userStatus === 'completed' && route.name === 'DashboardInfo' ) {
                                     return route.component ? (
 
                                       <Route

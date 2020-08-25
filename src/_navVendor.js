@@ -88,6 +88,11 @@ export default {
           url: '/sales/sales',
           icon: 'icon-puzzle',
         },
+        {
+          name: 'Delivery Status',
+          url: '/sales/delivery-status',
+          icon: 'icon-puzzle',
+        },
 
       ],
     },

@@ -101,7 +101,7 @@ class VatTax extends Component {
             });
 
             setTimeout(() => {
-                if (window.location.host == 'admin.banijjo.com.bd') {
+                if (window.location.host == 'store.banijjo.com.bd') {
                     this.setState({
                         date: vatTax.data[0].effective_date.split("T")[0],
                     })
