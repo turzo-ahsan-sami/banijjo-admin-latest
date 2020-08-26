@@ -1121,7 +1121,7 @@ app.post('/api/updateUserBusinessInfos', verifyToken, async function (req, res) 
       try {
         console.log('Requested Data : ', req.body);
 
-        const update_vendor_basic_info = await query ('UPDATE vendor_details SET trade_licence = '+JSON.stringify(req.body.trade_licence)+', tin = '+JSON.stringify(req.body.tin)+', business_start_date = '+JSON.stringify(req.body.bsd)+', web_address = '+JSON.stringify(req.body.web_address)+', business_address = '+JSON.stringify(req.body.business_address)+' WHERE vendor_id = '+req.body.user_employee_id);
+        const update_vendor_basic_info = await query ('UPDATE vendor_details SET trade_licence = '+JSON.stringify(req.body.trade_licence)+', tin = '+JSON.stringify(req.body.tin) +', vat_registration = '+JSON.stringify(req.body.vat_registration) +', business_start_date = '+JSON.stringify(req.body.bsd)+', web_address = '+JSON.stringify(req.body.web_address)+', business_address = '+JSON.stringify(req.body.business_address)+' WHERE vendor_id = '+req.body.user_employee_id);
 
         return res.send({ success: true, data: [], message: 'Data Updated Succesfully' });
 

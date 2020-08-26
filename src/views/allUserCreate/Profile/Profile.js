@@ -247,6 +247,9 @@ class Profile extends Component {
   handleSubmitBusinessUpdate (event) {
     event.preventDefault();
 
+    // console.log('Submitted For The Business Info : ', this.state); 
+    // return;
+
     fetch(base+'/api/updateUserBusinessInfos', {
       method: 'POST',
       headers: {
@@ -392,12 +395,13 @@ class Profile extends Component {
   }
 
   handleGetBusinessEditForm () {
-    console.log('Edit Method working...');
+    console.log('Edit Method working...', this.state.vendor_details);
 
     if (this.state.vendor_details.length > 0) {
       for (var i = 0; i < this.state.vendor_details.length; i++) {
         this.setState({
           tin: this.state.vendor_details[i].tin,
+          vat_registration: this.state.vendor_details[i].vat_registration,
           trade_licence: this.state.vendor_details[i].trade_licence,
           web_address: this.state.vendor_details[i].web_address,
           bsd: this.state.vendor_details[i].business_start_date,
@@ -568,6 +572,7 @@ class Profile extends Component {
                       <hr/>
                       <center>
                       <table>
+                      <tbody>
                         <tr>
                           <td>
                             <strong>Name</strong>
@@ -612,6 +617,7 @@ class Profile extends Component {
                             &nbsp;
                           </td>
                         </tr>
+                      </tbody>
                       </table>
                       </center>
 
@@ -635,6 +641,7 @@ class Profile extends Component {
                       <hr/>
                       <center>
                       <table>
+                      <tbody>
                         <tr>
                           <td>
                             <strong>Name</strong>
@@ -673,6 +680,7 @@ class Profile extends Component {
                             &nbsp;
                           </td>
                         </tr>
+                      </tbody>
                       </table>
                       </center>
 
@@ -710,6 +718,7 @@ class Profile extends Component {
                 this.state.vendor_details.length > 0 ?
                 <React.Fragment>
                 <table>
+                <tbody>
                   <tr>
                     <td>
                     <strong>Full Name</strong>
@@ -765,6 +774,7 @@ class Profile extends Component {
                     {this.state.vendor_details[0].present_address}
                     </td>
                   </tr>
+                </tbody>
                 </table>
                 </React.Fragment>
                 :
@@ -780,7 +790,7 @@ class Profile extends Component {
             <CardBody>
               <Row>
                 <Col md="6">
-                  <strong>Business Infos</strong>
+                  <strong>Business Info</strong>
                   &nbsp;
                   <a style={{cursor: "pointer"}} onClick={this.handleGetBusinessEditForm} title="Edit Business Infos">
                     <i className="fa fa-edit fa-lg" style={{marginTop: "0px !important"}}></i>
@@ -795,6 +805,7 @@ class Profile extends Component {
                 this.state.vendor_details.length > 0 ?
                 <React.Fragment>
                 <table>
+                <tbody>
                   <tr>
                     <td>
                     <strong>Trade Licence</strong>
@@ -830,6 +841,17 @@ class Profile extends Component {
                   </tr>
                   <tr>
                     <td>
+                    <strong>VAT Registration No.</strong>
+                    </td>
+                    <td>
+                    &nbsp;<strong>:</strong>&nbsp;
+                    </td>
+                    <td>
+                    {this.state.vendor_details[0].vat_registration}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
                     <strong>Business Address</strong>
                     </td>
                     <td>
@@ -850,6 +872,7 @@ class Profile extends Component {
                     {this.state.vendor_details[0].web_address}
                     </td>
                   </tr>
+                </tbody>
                 </table>
                 </React.Fragment>
                 :
@@ -880,6 +903,7 @@ class Profile extends Component {
                 this.state.vendor_details.length > 0 ?
                 <React.Fragment>
                 <table>
+                <tbody>
                   <tr>
                     <td>
                     <strong>Shop Name</strong>
@@ -924,6 +948,7 @@ class Profile extends Component {
                     {this.state.vendor_details[0].shop_currency}
                     </td>
                   </tr>
+                </tbody>
                 </table>
                 </React.Fragment>
                 :
@@ -1116,7 +1141,7 @@ class Profile extends Component {
                     <Form action="" method="post" encType="multipart/form-data" onSubmit={this.handleSubmitBusinessUpdate} onChange={this.handleChange} className="form-horizontal">
                       <FormGroup row>
                         <Col md="3">
-                          <Label htmlFor="Name">Trade Licence</Label>
+                          <Label htmlFor="trade_licence">Trade Licence</Label>
                         </Col>
                         <Col xs="12" md="9">
                           <Input type="text" id="trade_licence" name="trade_licence" placeholder="Trade Licence" value={this.state.trade_licence} />
@@ -1125,16 +1150,25 @@ class Profile extends Component {
 
                       <FormGroup row>
                         <Col md="3">
-                          <Label htmlFor="Email">Tin</Label>
+                          <Label htmlFor="tin">Tin</Label>
                         </Col>
                         <Col xs="12" md="9">
                           <Input type="text" id="tin" name="tin" placeholder="Tin" value={this.state.tin} />
                         </Col>
                       </FormGroup>
+                      
+                      <FormGroup row>
+                        <Col md="3">
+                          <Label htmlFor="vat_registration">VAT Registration No.</Label>
+                        </Col>
+                        <Col xs="12" md="9">
+                          <Input type="text" id="vat_registration" name="vat_registration" placeholder="VAT Registration No." value={this.state.vat_registration} />
+                        </Col>
+                      </FormGroup>
 
                       <FormGroup row>
                         <Col md="3">
-                          <Label htmlFor="Email">Business Start Date</Label>
+                          <Label htmlFor="bsd">Business Start Date</Label>
                         </Col>
                         <Col xs="12" md="9">
                           <Input type="text" id="bsd" name="bsd" placeholder="Business Start Date" value={this.state.bsd} />
@@ -1143,7 +1177,7 @@ class Profile extends Component {
 
                       <FormGroup row>
                         <Col md="3">
-                          <Label htmlFor="Website">Website</Label>
+                          <Label htmlFor="web_address">Website</Label>
                         </Col>
                         <Col xs="12" md="9">
                           <Input type="text" id="web_address" name="web_address" placeholder="Website" value={this.state.web_address} />
@@ -1152,7 +1186,7 @@ class Profile extends Component {
 
                       <FormGroup row>
                         <Col md="3">
-                          <Label htmlFor="Website">Business Address</Label>
+                          <Label htmlFor="business_address">Business Address</Label>
                         </Col>
                         <Col xs="12" md="9">
                           <Input type="textarea" id="business_address" name="business_address" placeholder="Business Address" value={this.state.business_address} />
