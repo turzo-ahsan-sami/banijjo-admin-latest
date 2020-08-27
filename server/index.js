@@ -4283,17 +4283,17 @@ app.post('/api/store-token', async function (req, res) {
 });
 
 app.get('/api/parent-category', (req, res) => {
-  console.log('User Name : ', req.body.username);
-  console.log('User Password : ', req.body.password);
+  // console.log('User Name : ', req.body.username);
+  // console.log('User Password : ', req.body.password);
 
   var sessionStorage = '';
 
   select_sql_query = "SELECT * FROM category WHERE parent_category_id= 0";
 
-  console.log('QUERY : ', select_sql_query);
+  // console.log('QUERY : ', select_sql_query);
 
   dbConnection.query(select_sql_query, function (error, results) {
-    console.log("results",results);
+    // console.log("results",results);
     if (results.length > 0) {
       return res.send({ success: true, data: results,  message: 'successfully get the information from category' });
     }
@@ -4697,11 +4697,9 @@ app.get('/api/getVendorWiseProductList', (req, res) => {
 
 app.post('/api/vendor-details-shop', verifyToken, async function (req, res) {
 
-  console.log('Business Details : ', req.body);
-
   jwt.verify(req.token, 'secretkey', async function (err, authData) {
     if (err) {
-      res.sendStatus(403);
+      res.status(403).send({success: false, message: 'jwt expired', status: '403'});
     }
     else {
       try {
@@ -4902,7 +4900,6 @@ app.post('/api/vendor-details-shop', verifyToken, async function (req, res) {
 
 app.post('/api/vendor-details-business', verifyToken, async function (req, res) {
   console.log('Business Details : ', req.body);
-
   jwt.verify(req.token, 'secretkey', async function (err, authData) {
     if (err) {
       res.sendStatus(403);
@@ -4914,14 +4911,14 @@ app.post('/api/vendor-details-business', verifyToken, async function (req, res) 
         let imageNameForCompress = '';
         let isAnyError = false;
 
-        if(req.files!=null){
-          if(!req.body.imageFile){
+        if (req.files != null) {
+          if (!req.body.imageFile) {
             var productFilesArray = [];
             productFilesArray = req.files.imageFile;
             console.log('Image Array : ', productFilesArray);
-            if(Array.isArray(productFilesArray)){
+            if (Array.isArray(productFilesArray)) {
               console.log('inside 1');
-              productFilesArray.map(function(file,index){
+              productFilesArray.map(function (file, index) {
                 console.log('inside 2');
                 file.mv(`${__dirname}/../public/upload/vendor/${file.name}`, err => {
                   if (err) {
@@ -4931,7 +4928,7 @@ app.post('/api/vendor-details-business', verifyToken, async function (req, res) 
                 });
               })
             }
-            else{
+            else {
               let productFiles = req.files.imageFile;
               console.log('outside 1');
               productFiles.mv(`${__dirname}/../public/upload/vendor/${productFiles.name}`, err => {
@@ -4945,7 +4942,7 @@ app.post('/api/vendor-details-business', verifyToken, async function (req, res) 
               });
 
               // we are compressing the image...
-              setTimeout(()=> {
+              setTimeout(() => {
                 if (isAnyError == false) {
                   INPUT_path_to_your_images = `${__dirname}/../public/upload/vendor/${imageNameForCompress}`;
                   console.log('image path & name : ', `${__dirname}/../public/upload/vendor/${imageNameForCompress}`);
@@ -4973,89 +4970,116 @@ app.post('/api/vendor-details-business', verifyToken, async function (req, res) 
 
         // assign all the values ...
 
-        var tradeLicense = null;
-        var businessStartDate = null;
-        var tinNumber = null;
-        var businessAddress = null;
-        var webAddress = null;
-        var vendorCategory = null;
-        var productCategory = null;
-
-        if (!req.body.tradeLicenceName) {
-          tradeLicense = JSON.parse(req.body.tradeLicenceName);
-        }
-        if (!req.body.businessStartDateName) {
-          businessStartDate = JSON.parse(req.body.businessStartDateName);
-        }
-        if (!req.body.tinName) {
-          tinNumber = JSON.parse(req.body.tinName);
-        }
-        if (!req.body.businessAddressName) {
-          businessAddress = JSON.parse(req.body.businessAddressName);
-        }
-        if (!req.body.webAddressName) {
-          webAddress = JSON.parse(req.body.webAddressName);
-        }
-        if (!req.body.vendorCategoryName) {
-            vendorCategory = JSON.parse(req.body.vendorCategoryName)
-        }
-        if (!req.body.productCategoryName) {
-            productCategory = JSON.parse(req.body.productCategoryName);
-        }
-        // end of assignment..
+        var businessImage = (req.body.businessImage);
+        var transactionInformationName = (req.body.transactionInformationName);
+        var tradeLicense = (req.body.tradeLicenceName);
+        var businessStartDate = (req.body.businessStartDateName);
+        var tinNumber = (req.body.tinName);
+        var vat_registration = (req.body.vat_registration);
+        var businessAddress = (req.body.businessAddressName);
+        var webAddress = (req.body.webAddressName);
+        var vendorCategory = (req.body.vendorCategoryName)
+        var productCategory = (req.body.productCategoryName);
+        var bankName = (req.body.bankName);
+        var account_name = (req.body.account_name);
+        var ac_no = (req.body.ac_no);
+        var branch = (req.body.branch);
+        var routing_no = (req.body.routing_no);
 
         if (JSON.parse(req.body.transactionInformationName) == 'Cash') {
           // const update_vendor_details_for_business_details = await query ('UPDATE vendor_details SET cover_photo = '+req.body.businessImage+', trade_licence = '+req.body.tradeLicenceName+', business_start_date = '+req.body.businessStartDateName+', tin = '+req.body.tinName+', business_address = '+req.body.businessAddressName+', web_address = '+req.body.webAddressName+', transaction_information = '+req.body.transactionInformationName+', vendor_category = '+req.body.vendorCategoryName+', product_category = '+req.body.productCategoryName+', product_sub_category = '+req.body.productCategoryName+', step_completed = "completed" WHERE vendor_id = '+req.body.vendorId+' AND status = 1');
 
-          dbConnection.query('UPDATE vendor_details SET cover_photo = ?,  trade_licence = ?, business_start_date = ?, tin = ?, business_address = ?, web_address = ?, transaction_information = ?, vendor_category = ?, product_category = ?, product_sub_category = ?, step_completed = ? WHERE vendor_id = ? AND status = ?', [JSON.parse(req.body.businessImage), tradeLicense, businessStartDate, tinNumber, businessAddress, webAddress, JSON.parse(req.body.transactionInformationName), vendorCategory, productCategory, productCategory, 'completed',  JSON.parse(req.body.vendorId), 1], function (err, result) {
-            console.log(result);
-            console.log(err);
+          var bankName = '';
+          var account_name = '';
+          var ac_no = '';
+          var branch = '';
+          var routing_no = '';
 
-            if (result) {
-              console.log("1 record updated at vendor_details");
-              console.log("req.body.vendorId : ", req.body.vendorId);
-              // return res.send({ success: true, message: 'shop info inserted'});
-              updateUserTableInfo(req.body.vendorId, res);
-            }
-            else if (err) {
-              console.log("Error to update at vendor_details : ", err);
-              return res.send({ success: false, message: 'shop info Update failed !'});
-            }
+          //dbConnection.query('UPDATE vendor_details SET cover_photo = ?,  trade_licence = ?, business_start_date = ?, tin = ?, vat_registration = ?, business_address = ?, web_address = ?, transaction_information = ?, vendor_category = ?, product_category = ?, product_sub_category = ?, step_completed = ? WHERE vendor_id = ? AND status = ?', [JSON.parse(req.body.businessImage), tradeLicense, businessStartDate, tinNumber, vat_registration, businessAddress, webAddress, JSON.parse(req.body.transactionInformationName), vendorCategory, productCategory, productCategory, 'completed',  JSON.parse(req.body.vendorId), 1], function (err, result) {
+          dbConnection.query(`
+            UPDATE vendor_details 
+            SET 
+            cover_photo = '${businessImage}',  
+            trade_licence = '${tradeLicense}', 
+            business_start_date = '${businessStartDate}', 
+            tin = '${tinNumber}', 
+            vat_registration = '${vat_registration}', 
+            bankName = '${bankName}', 
+            account_name = '${account_name}', 
+            ac_no = '${ac_no}', 
+            branch = '${branch}', 
+            routing_no = '${routing_no}', 
+            business_address = '${businessAddress}', 
+            web_address = '${webAddress}', 
+            transaction_information = '${transactionInformationName}', 
+            vendor_category = '${vendorCategory}', 
+            product_category = '${productCategory}', 
+            product_sub_category = '${productCategory}', 
+            step_completed = 'completed' 
+            WHERE vendor_id = ${JSON.parse(req.body.vendorId)} AND status = 1`,
+            function (err, result) {
+              console.log(result);
+              console.log(err);
 
-          });
+              if (result) {
+                console.log("1 record updated at vendor_details");
+                console.log("req.body.vendorId : ", req.body.vendorId);
+                // return res.send({ success: true, message: 'shop info inserted'});
+                updateUserTableInfo(req.body.vendorId, res);
+              }
+              else if (err) {
+                console.log("Error to update at vendor_details : ", err);
+                return res.send({ success: false, message: 'shop info Update failed !' });
+              }
+
+            });
 
         }
         else {
           // const update_vendor_details_for_business_details = await query ('UPDATE vendor_details SET cover_photo = '+req.body.businessImage+', trade_licence = '+req.body.tradeLicenceName+', business_start_date = '+req.body.businessStartDateName+', tin = '+req.body.tinName+', business_address = '+req.body.businessAddressName+', web_address = '+req.body.webAddressName+', transaction_information = '+req.body.transactionInformationName+', bankName = '+req.body.bank+', account_name = '+req.body.accountName+', ac_no = '+req.body.accountNo+', branch = '+req.body.branch+', routing_no = '+req.body.routingNo+', vendor_category = '+req.body.vendorCategoryName+', product_category = '+req.body.productCategoryName+', product_sub_category = '+req.body.productCategoryName+', step_completed = "completed" WHERE vendor_id = '+req.body.vendorId+' AND status = 1');
 
-          dbConnection.query('UPDATE vendor_details SET cover_photo = ?, trade_licence = ?, business_start_date = ?, tin = ?, business_address = ?, web_address = ?, transaction_information = ?, bankName = ?, account_name = ?, ac_no = ?, branch = ?, routing_no = ?, vendor_category = ?, product_category = ?, product_sub_category = ?, step_completed = ? WHERE vendor_id = ? AND status = ?', [JSON.parse(req.body.businessImage), tradeLicense, businessStartDate, tinNumber, businessAddress, webAddress, JSON.parse(req.body.transactionInformationName), JSON.parse(req.body.bank), JSON.parse(req.body.accountName), JSON.parse(req.body.accountNo), JSON.parse(req.body.branch), JSON.parse(req.body.routingNo), vendorCategory, productCategory, productCategory, 'completed', JSON.parse(req.body.vendorId), 1], function (err, result) {
-            console.log(result);
-            console.log(err);
+          // dbConnection.query('UPDATE vendor_details SET cover_photo = ?, trade_licence = ?, business_start_date = ?, tin = ?, business_address = ?, web_address = ?, transaction_information = ?, bankName = ?, account_name = ?, ac_no = ?, branch = ?, routing_no = ?, vendor_category = ?, product_category = ?, product_sub_category = ?, step_completed = ? WHERE vendor_id = ? AND status = ?', [JSON.parse(req.body.businessImage), tradeLicense, businessStartDate, tinNumber, businessAddress, webAddress, JSON.parse(req.body.transactionInformationName), JSON.parse(req.body.bank), JSON.parse(req.body.accountName), JSON.parse(req.body.accountNo), JSON.parse(req.body.branch), JSON.parse(req.body.routingNo), vendorCategory, productCategory, productCategory, 'completed', JSON.parse(req.body.vendorId), 1], function (err, result) {
 
-            if (result) {
-              console.log("1 record updated at vendor_business_details");
-              console.log("req.body.vendorId : ", req.body.vendorId);
-              // return res.send({ success: true, message: 'vendor details info inserted'});
-              updateUserTableInfo(req.body.vendorId, res);
-            }
-            else if (err) {
-              console.log("Error to update at vendor_details : ", err);
-              return res.send({ success: false, message: 'vendor details insertion failed !'});
-            }
-
-          });
-
+          dbConnection.query(`
+            UPDATE vendor_details 
+            SET 
+            cover_photo = '${businessImage}',  
+            trade_licence = '${tradeLicense}', 
+            business_start_date = '${businessStartDate}', 
+            tin = '${tinNumber}', 
+            vat_registration = '${vat_registration}', 
+            bankName = '${bankName}', 
+            account_name = '${account_name}', 
+            ac_no = '${ac_no}', 
+            branch = '${branch}', 
+            routing_no = '${routing_no}', 
+            business_address = '${businessAddress}', 
+            web_address = '${webAddress}', 
+            transaction_information = '${transactionInformationName}', 
+            vendor_category = '${vendorCategory}', 
+            product_category = '${productCategory}', 
+            product_sub_category = '${productCategory}', 
+            step_completed = 'completed' 
+            WHERE vendor_id = ${JSON.parse(req.body.vendorId)} AND status = 1`,
+            function (err, result) {
+              if (result) {
+                console.log("1 record updated at vendor_business_details : ", result);
+                console.log("req.body.vendorId : ", req.body.vendorId);
+                updateUserTableInfo(req.body.vendorId, res);
+              }
+              else if (err) {
+                console.log("Error to update at vendor_details : ", err);
+                return res.send({ success: false, message: 'vendor details insertion failed !' });
+              }
+            });
         }
 
         // const update_user_table = await query ('UPDATE user SET user_status = "completed" WHERE employee_id = '+JSON.parse(req.body.vendorId)+' AND status = 1');
-        //
         // return res.send({ success: true, message: 'Personal Details Update successfully !'});
       } catch (e) {
         console.log('Error occured at the time of update .. ', e);
-
-        const update_user_table = await query ('UPDATE vendor_details SET user_status = 1 WHERE employee_id = '+JSON.parse(req.body.vendorId));
-
-        return res.send({ success: false, message: 'Personal Details Update rejected !'});
+        const update_user_table = await query('UPDATE vendor_details SET user_status = 1 WHERE employee_id = ' + JSON.parse(req.body.vendorId));
+        return res.send({ success: false, message: 'Personal Details Update rejected !' });
       }
     }
   });
