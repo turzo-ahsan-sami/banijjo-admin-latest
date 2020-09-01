@@ -2,9 +2,9 @@
   "name": "@coreui/coreui-free-react-admin-template",
   "version": "2.6.0",
   "description": "CoreUI React Open Source Bootstrap 4 Admin Template",
-  "author": "Łukasz Holeczek",
-  "homepage": "http://store.banijjo.com.bd/",
-  "copyright": "Copyright 2017-2019 creativeLabs Łukasz Holeczek",
+  "author": "Ambala it | turzo",
+  "homepage": "https://store.banijjo.com.bd/",
+  "copyright": "Copyright 2020-2029 Ambala IT",
   "license": "MIT",
   "dependencies": {
     "@coreui/coreui": "^2.1.12",

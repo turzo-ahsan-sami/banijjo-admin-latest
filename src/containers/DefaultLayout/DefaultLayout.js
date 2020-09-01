@@ -103,7 +103,7 @@ class DefaultLayout extends Component {
                                           )} />
                                     ) : (null);
                                   }
-                                  else if (userType === 'vendor' && userStatus === 'approved' && (route.name === 'Products' || route.name === 'Dashboard' || route.name === 'Purchase' || route.name === 'ProductSpecificationDetails' || route.name === 'User Profile' || route.name === 'Discount' || route.name === 'Sales Info' ||  route.name === 'Delivery Status')) {
+                                  else if (userType === 'vendor' && userStatus === 'approved' && (route.name === 'Category' || route.name === 'Categories' || route.name === 'Products' || route.name === 'Dashboard' || route.name === 'Purchase' || route.name === 'ProductSpecificationDetails' || route.name === 'User Profile' || route.name === 'Discount' || route.name === 'Sales Info' ||  route.name === 'Delivery Status')) {
                                     return route.component ? (
 
                                       <Route
@@ -179,3 +179,5 @@ class DefaultLayout extends Component {
 }
 
 export default DefaultLayout;
+
+
