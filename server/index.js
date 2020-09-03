@@ -4129,7 +4129,8 @@ app.post('/api/submit-email', async function (req, res) {
       var encrypted = cipher.update(req.body.email_address, 'utf8', 'hex');
       encrypted += cipher.final('hex');
 
-      var url = `http://localhost:3005/resetpassword/${encrypted}`
+      // var url = `http://localhost:3005/resetpassword/${encrypted}`
+      var url = `${process.env.REACT_APP_PUBLIC_URL}/resetpassword/${encrypted}`;
 
       var mailOption = {
           from : 'info@banijjo.com.bd',
