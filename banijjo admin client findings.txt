@@ -1,3 +1,57 @@
+#
+# 03-09-2020
+# To do
+#
+
+
+17) * need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases)
+18) * need required the color info at the time of product entry if user choose a color. (see notes)
+
+21) vendor can purchase own or other 3rd party supplier.
+22) Product info and Purchase info.
+
+23) Stock Info (With new purchase from vendor). (optional vat registration field in purchase)
+
+
+
+
+
+24) If product returned from the customer need to add a note section which will deliver to banijjo admin. (add "reason" textfied in sales return)
+25) at the time of product entry, can’t create new line in the description and need the text area like doc file. (texit editor like interface)
+
+10) News // dependency : Sajib bhai for sub-domain and server
+11) customer review (front, admin)
+
+
+19) profile image to picture, Shop/Brand Image to logo (compress image)
+20) Vendor all image (Like: banner, products, profile, brand logo) can be delete by admin.
+
+29) City Bank Payment Gateway (microservice + front)
+
+X 27) global specification system. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================================================================================================================================
+
+
+
 Banijjo:
 1) User Registration Problem (Remove all required Fields) [Done]
 2) Forget password (admin & front)
