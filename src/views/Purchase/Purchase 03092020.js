@@ -161,7 +161,7 @@ class Purchase extends Component {
   // AUTO SUGGEST START
 
   searchProduct(event) {
-    // console.log('Searched value : ', event.target.value);
+    console.log('Searched value : ', event.target.value);
 
     let target = event.target;
     let value = target.value;
@@ -178,11 +178,11 @@ class Purchase extends Component {
         headers: { 'Authorization': 'Atiq ' + cookie.load('token') }
       })
         .then(res => {
-          // console.log(res);
+          console.log(res);
           return res.json()
         })
         .then(products => {
-          // console.log('THe api response for products quesry : ', products.data);
+          console.log('THe api response for products quesry : ', products.data);
 
           this.setState({
             productList: products.data
@@ -192,7 +192,7 @@ class Purchase extends Component {
 
           let i = 0;
 
-          // console.log('Array Length : ', this.state.productList.length);
+          console.log('Array Length : ', this.state.productList.length);
 
           while (i < this.state.productList.length) {
 
@@ -202,12 +202,76 @@ class Purchase extends Component {
             productObject.product_name_code = this.state.productList[i].product_name + ' - ' + this.state.productList[i].product_sku;
 
             this.state.productListArray.push(productObject);
-            // console.log('i : ', i);
+            console.log('i : ', i);
             ++i;
           }
 
-          console.log('Product List : ', this.state.productList);
-          console.log('Product List Array : ', this.state.productListArray);
+          console.log('Product List : ', this.state.productListArray);
+
+          return false;
+        });
+
+    }
+    else {
+      this.state.productListArray = [];
+
+      console.log('Product List : ', this.state.productListArray);
+    }
+
+
+  }
+
+  searchProductForEdit(event) {
+    console.log('Searched value : ', event.target.value);
+
+    let target = event.target;
+    let value = target.value;
+    let name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+
+    if (event.target.value != '') {
+
+      fetch(base + `/api/search_products_for_purchase_edit/?id=${event.target.value}&vendorId=${this.state.supplierId}`, {
+        method: 'GET',
+        headers: { 'Authorization': 'Atiq ' + cookie.load('token') }
+      })
+        .then(res => {
+          console.log(res);
+          return res.json()
+        })
+        .then(products => {
+          console.log('THe api response for products quesry : ', products.data);
+
+          this.setState({
+            productList: products.data
+          })
+
+          this.state.productListArray = [];
+
+          let i = 0;
+
+          console.log('Array Length : ', this.state.productList.length);
+
+          while (i < this.state.productList.length) {
+
+            let productObject = {};
+
+            productObject.id = this.state.productList[i].id;
+            productObject.product_name_code = this.state.productList[i].product_name + ' - ' + this.state.productList[i].product_sku;
+            productObject.color_name = this.state.productList[i].name;
+            productObject.size = this.state.productList[i].size;
+            productObject.quantity = this.state.productList[i].quantity;
+            productObject.price = this.state.productList[i].price;
+
+            this.state.productListArray.push(productObject);
+            console.log('i : ', i);
+            ++i;
+          }
+
+          console.log('Product List : ', this.state.productListArray);
 
           return false;
         });
@@ -880,13 +944,13 @@ class Purchase extends Component {
                 <tbody>
                   {
                     this.state.allPurchase.map((PurchasseValue, Key) =>
-                      <tr key={Key}>
+                      <tr>
                         <td>{PurchasseValue.billNo}</td>
                         <td>{PurchasseValue.chalanNo}</td>
                         {
                           this.state.vendorListAll.map((vendorListValue, key) =>
                             vendorListValue.id == PurchasseValue.supplierId ?
-                              <td key={key}>{vendorListValue.name}</td>
+                              <td>{vendorListValue.name}</td>
                               :
                               null
                           )
@@ -965,7 +1029,7 @@ class Purchase extends Component {
                         <Label htmlFor="values">Chalan No</Label>
                       </Col>
                       <Col xs="12" md="9">
-                        <Input type="text" id="chalanNo" name="chalanNo" placeholder="Chalan No" required={true} ref='clear' onChange={this.handleAddChange.bind(this)} />
+                        <Input type="text" id="chalanNo" name="chalanNo" placeholder="Chalan No" required="true" ref='clear' onChange={this.handleAddChange.bind(this)} />
                       </Col>
                     </FormGroup>
 
@@ -988,7 +1052,7 @@ class Purchase extends Component {
                               <option value="">select</option>
                               {
                                 this.state.vendorListAll.map((vendorListValue, key) =>
-                                  <option value={vendorListValue.id} key={key}> {vendorListValue.name} </option>
+                                  <option value={vendorListValue.id}> {vendorListValue.name} </option>
                                 )
                               }
                             </Input>
@@ -1050,17 +1114,17 @@ class Purchase extends Component {
 
                     <FormGroup row>
                       <Col xs="12" md="3">
-                        <Input type="text" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.productName || ""} />
-                        <Input type="hidden" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.id || ""} />
+                        <Input type="text" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.productName} />
+                        <Input type="hidden" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.id} />
                       </Col>
 
                       <Col xs="12" md="1">
-                        <select defaultValue={'DEFAULT'} id="productColor" name="productColor" placeholder="Color" style={{ height: "34px", borderRadius: "4px", display: "inline-block", overflow: "hidden", border: "1px solid #cccccc" }} disabled={(this.state.disabledColor) ? "disabled" : ""} >
-                          <option value="DEFAULT" disabled>Color</option>
+                        <select id="productColor" name="productColor" placeholder="Color" style={{ height: "34px", borderRadius: "4px", display: "inline-block", overflow: "hidden", border: "1px solid #cccccc" }} disabled={(this.state.disabledColor) ? "disabled" : ""} >
+                          <option value="" disabled selected>Color</option>
                           {
                             this.state.colorList.length > 0 ?
                               this.state.colorList.map((colorListValue, key) =>
-                                <option value={colorListValue.id} key={key}>{colorListValue.name}</option>
+                                <option value={colorListValue.id}>{colorListValue.name}</option>
                               )
                               :
                               null
@@ -1069,12 +1133,12 @@ class Purchase extends Component {
                       </Col>
 
                       <Col xs="12" md="1">
-                        <select defaultValue={'DEFAULT'} id="productSize" name="productSize" placeholder="Size" style={{ height: "34px", borderRadius: "4px", display: "inline-block", overflow: "hidden", border: "1px solid #cccccc" }} disabled={(this.state.disabledSize) ? "disabled" : ""} >
-                          <option value="DEFAULT" disabled>Size</option>
+                        <select id="productSize" name="productSize" placeholder="Size" style={{ height: "34px", borderRadius: "4px", display: "inline-block", overflow: "hidden", border: "1px solid #cccccc" }} disabled={(this.state.disabledSize) ? "disabled" : ""} >
+                          <option value="" disabled selected>Size</option>
                           {
                             this.state.sizeList.length > 0 ?
                               this.state.sizeList.map((sizeListValue, key) =>
-                                <option value={sizeListValue.id} key={key}>{sizeListValue.size}</option>
+                                <option value={sizeListValue.id}>{sizeListValue.size}</option>
                               )
                               :
                               null
@@ -1096,7 +1160,7 @@ class Purchase extends Component {
 
                       <Col xs="12" md="1">
                         <Label htmlFor="add"> <a href="#" onClick={this.addClick.bind(this)}> <i className="fa fa-plus-square" style={{ paddingTop: '11px' }}></i>  </a> </Label>&nbsp;
-                        {/* <Label htmlFor="productName"> <a href="#"> <i className="fa fa-window-close" style={{paddingTop: '11px'}}></i> </a> </Label>                 */}
+                  {/* <Label htmlFor="productName"> <a href="#"> <i className="fa fa-window-close" style={{paddingTop: '11px'}}></i> </a> </Label>                 */}
                       </Col>
                     </FormGroup>
 
@@ -1110,7 +1174,7 @@ class Purchase extends Component {
                           this.state.productListArray.length != 0 ?
 
                             this.state.productListArray.map((values, key) =>
-                              <ListGroupItem key={key} tag="button" name="productName" onClick={this.handleSearchText.bind(this)} data-id={values.id} data-value={values.product_name_code} action>{values.product_name_code}</ListGroupItem>
+                              <ListGroupItem tag="button" name="productName" onClick={this.handleSearchText.bind(this)} data-id={values.id} data-value={values.product_name_code} action>{values.product_name_code}</ListGroupItem>
                             ) :
                             null
                         }
@@ -1121,7 +1185,7 @@ class Purchase extends Component {
 
                     {
                       this.state.PurchaseList.map((purchaseValues, key1) =>
-                        <FormGroup row key={key1}>
+                        <FormGroup row>
                           <Col md="4">
                             <Input type="text" readOnly value={purchaseValues.productName} />
                           </Col>
@@ -1147,7 +1211,7 @@ class Purchase extends Component {
 
                     <center>
                       <Button type="submit" size="sm" color="success"><i className="fa fa-dot-circle-o"></i> Submit</Button>&nbsp;
-                      <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
+                <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
                     </center>
 
 
@@ -1292,7 +1356,7 @@ class Purchase extends Component {
                     {
                       this.state.colorList.length > 0 ?
                         this.state.colorList.map((colorListValue, key) =>
-                          <option value={colorListValue.id} key={key}>{colorListValue.name}</option>
+                          <option value={colorListValue.id}>{colorListValue.name}</option>
                         )
                         :
                         null
@@ -1306,7 +1370,7 @@ class Purchase extends Component {
                     {
                       this.state.sizeList.length > 0 ?
                         this.state.sizeList.map((sizeListValue, key) =>
-                          <option value={sizeListValue.id} key={key}>{sizeListValue.size}</option>
+                          <option value={sizeListValue.id}>{sizeListValue.size}</option>
                         )
                         :
                         null
@@ -1342,7 +1406,7 @@ class Purchase extends Component {
                     this.state.productListArray.length != 0 ?
 
                       this.state.productListArray.map((values, key) =>
-                        <ListGroupItem key={key} tag="button" name="productName" onClick={this.handleSearchText.bind(this)} data-id={values.id} data-value={values.product_name_code} action>{values.product_name_code}</ListGroupItem>
+                        <ListGroupItem tag="button" name="productName" onClick={this.handleSearchText.bind(this)} data-id={values.id} data-value={values.product_name_code} action>{values.product_name_code}</ListGroupItem>
                       ) :
                       null
                   }
@@ -1354,7 +1418,7 @@ class Purchase extends Component {
 
               {
                 this.state.PurchaseList.map((purchaseValues, key1) =>
-                  <FormGroup row key={key1}>
+                  <FormGroup row>
                     {/* <Col md="2">
                   <Input type="text" readOnly value={purchaseValues.productName}/>
                 </Col>
