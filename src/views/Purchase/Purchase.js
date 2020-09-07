@@ -97,6 +97,9 @@ class Purchase extends Component {
       isUpdateClicked: false,
       confirmModal: false,
       purchaseConfirmId: -1,
+
+      vendor_type: "",
+      vat_registration: "",
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -106,6 +109,163 @@ class Purchase extends Component {
     this.toggleLargeEdit = this.toggleLargeEdit.bind(this);
     this.toggleSmall = this.toggleSmall.bind(this);
     this.toggleConfirmModal = this.toggleConfirmModal.bind(this);
+  }
+
+  componentDidMount() {
+    const userName = localStorage.getItem('userName');
+    const userPassword = localStorage.getItem('userPassword');
+
+    this.state.userName = userName;
+    this.state.employee_id = localStorage.getItem('employee_id');
+
+    this.state.productListArray = [];
+
+    console.log(this.state.productListArray);
+
+    this.state.vendorId = localStorage.getItem('employee_id');
+
+    // this.setState({
+    //   vendorId: localStorage.getItem('employee_id')
+    // })
+
+    let tempDate = new Date();
+    let date = tempDate.getFullYear() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate();
+
+    this.state.currentDate = date;
+
+    if (userName === null && userPassword === null) {
+      this.props.history.push("/login");
+    }
+
+    if (localStorage.user_type == 'admin' || localStorage.user_type == 'admin_manager' || localStorage.user_type == 'super_admin') {
+      this.setState({
+        storedBy: 0
+      })
+    }
+    else {
+      this.setState({
+        storedBy: this.state.vendorId
+      })
+    }
+
+    if (localStorage.user_type == 'vendor') {
+      this.setState({
+        supplierId: localStorage.employee_id
+      })
+    }
+
+    fetch(base + '/api/categories', {
+      method: 'GET'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(category => {
+        console.log(category.data);
+        this.setState({
+          productsCategory: category.data
+        })
+
+        return false;
+      });
+
+    fetch(base + '/api/vendor_list_for_product', {
+      method: 'GET'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(vendors => {
+        console.log(vendors.data);
+        this.setState({
+          vendorListAll: vendors.data
+        })
+
+        // this.state.vendorListAll.map((vendorListValue, key) =>
+        //   console.log(vendorListValue.name)
+        // )
+
+        // for (let i = 0; i < this.state.vendorListAll.length; i++){
+        //   console.log(this.state.vendorListAll[i].name);
+        // }
+
+        return false;
+      });
+
+    console.log('Vendor Id : ', this.state.vendorId);
+
+    fetch(base + `/api/bill_no/?id=${this.state.vendorId}`, {
+      method: 'GET'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(currentBillNo => {
+        console.log('Current Bill No : ', currentBillNo.data);
+        this.setState({
+          currentBillNo: currentBillNo.data
+        })
+
+        // console.log(this.state.currentBillNo);
+        // this.state.currentBillNo = Number(this.state.currentBillNo) + 1;
+        // this.state.currentBillNo = this.state.vendor_shop_name+'-'+this.state.currentBillNo;
+        // console.log(this.state.currentBillNo);
+
+        return false;
+      });
+
+    console.log('Getting All Purchase Data...');
+
+    fetch(base + `/api/getAllPurchase/?id=${this.state.vendorId}`, {
+      method: 'GET'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(allPurchase => {
+        console.log('All Purchase Data : ', allPurchase.data);
+        this.setState({
+          allPurchase: allPurchase.data
+        })
+
+        return false;
+      });
+
+    fetch(base + '/api/getColors', {
+      method: 'GET'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(infos => {
+        console.log(infos.data);
+        this.setState({
+          colorListAll: infos.data
+        });
+        return false;
+      });
+
+    fetch(base + '/api/getSizeInfos', {
+      method: 'GET'
+    })
+      .then(res => {
+        console.log(res);
+        return res.json()
+      })
+      .then(infos => {
+        console.log(infos.data);
+        this.setState({
+          sizeListAll: infos.data
+        });
+        return false;
+      });
+
+
   }
 
   toggleSmall(event) {
@@ -336,162 +496,7 @@ class Purchase extends Component {
     this.setState((prevState) => { return { fadeIn: !prevState } });
   }
 
-  componentDidMount() {
-    const userName = localStorage.getItem('userName');
-    const userPassword = localStorage.getItem('userPassword');
 
-    this.state.userName = userName;
-    this.state.employee_id = localStorage.getItem('employee_id');
-
-    this.state.productListArray = [];
-
-    console.log(this.state.productListArray);
-
-    this.state.vendorId = localStorage.getItem('employee_id');
-
-    // this.setState({
-    //   vendorId: localStorage.getItem('employee_id')
-    // })
-
-    let tempDate = new Date();
-    let date = tempDate.getFullYear() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate();
-
-    this.state.currentDate = date;
-
-    if (userName === null && userPassword === null) {
-      this.props.history.push("/login");
-    }
-
-    if (localStorage.user_type == 'admin' || localStorage.user_type == 'admin_manager' || localStorage.user_type == 'super_admin') {
-      this.setState({
-        storedBy: 0
-      })
-    }
-    else {
-      this.setState({
-        storedBy: this.state.vendorId
-      })
-    }
-
-    if (localStorage.user_type == 'vendor') {
-      this.setState({
-        supplierId: localStorage.employee_id
-      })
-    }
-
-    fetch(base + '/api/categories', {
-      method: 'GET'
-    })
-      .then(res => {
-        console.log(res);
-        return res.json()
-      })
-      .then(category => {
-        console.log(category.data);
-        this.setState({
-          productsCategory: category.data
-        })
-
-        return false;
-      });
-
-    fetch(base + '/api/vendor_list_for_product', {
-      method: 'GET'
-    })
-      .then(res => {
-        console.log(res);
-        return res.json()
-      })
-      .then(vendors => {
-        console.log(vendors.data);
-        this.setState({
-          vendorListAll: vendors.data
-        })
-
-        // this.state.vendorListAll.map((vendorListValue, key) =>
-        //   console.log(vendorListValue.name)
-        // )
-
-        // for (let i = 0; i < this.state.vendorListAll.length; i++){
-        //   console.log(this.state.vendorListAll[i].name);
-        // }
-
-        return false;
-      });
-
-    console.log('Vendor Id : ', this.state.vendorId);
-
-    fetch(base + `/api/bill_no/?id=${this.state.vendorId}`, {
-      method: 'GET'
-    })
-      .then(res => {
-        console.log(res);
-        return res.json()
-      })
-      .then(currentBillNo => {
-        console.log('Current Bill No : ', currentBillNo.data);
-        this.setState({
-          currentBillNo: currentBillNo.data
-        })
-
-        // console.log(this.state.currentBillNo);
-        // this.state.currentBillNo = Number(this.state.currentBillNo) + 1;
-        // this.state.currentBillNo = this.state.vendor_shop_name+'-'+this.state.currentBillNo;
-        // console.log(this.state.currentBillNo);
-
-        return false;
-      });
-
-    console.log('Getting All Purchase Data...');
-
-    fetch(base + `/api/getAllPurchase/?id=${this.state.vendorId}`, {
-      method: 'GET'
-    })
-      .then(res => {
-        console.log(res);
-        return res.json()
-      })
-      .then(allPurchase => {
-        console.log('All Purchase Data : ', allPurchase.data);
-        this.setState({
-          allPurchase: allPurchase.data
-        })
-
-        return false;
-      });
-
-    fetch(base + '/api/getColors', {
-      method: 'GET'
-    })
-      .then(res => {
-        console.log(res);
-        return res.json()
-      })
-      .then(infos => {
-        console.log(infos.data);
-        this.setState({
-          colorListAll: infos.data
-        });
-        return false;
-      });
-
-    fetch(base + '/api/getSizeInfos', {
-      method: 'GET'
-    })
-      .then(res => {
-        console.log(res);
-        return res.json()
-      })
-      .then(infos => {
-        console.log(infos.data);
-        this.setState({
-          sizeListAll: infos.data
-        });
-        return false;
-      });
-
-
-  }
 
   handleAddTags(event) {
     console.log(event.target.value);
@@ -555,9 +560,9 @@ class Purchase extends Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state);
     event.preventDefault();
-
+    console.log(this.state);
+    
     fetch(base + '/api/saveProductPurchase', {
       method: "POST",
       headers: {
@@ -730,6 +735,7 @@ class Purchase extends Component {
           largeEdit: !this.state.largeEdit,
           currentBillNo: purchaseUpdate.data[0].billNo,
           chalanNo: purchaseUpdate.data[0].chalanNo,
+          vat_registration: purchaseUpdate.data[0].vat_registration,
           supplierId: purchaseUpdate.data[0].supplierId,
           SuplierName: purchaseUpdate.data[2],
           purchaseDate: purchaseUpdate.data[0].purchaseDate,
@@ -844,6 +850,7 @@ class Purchase extends Component {
   render() {
 
     return (
+      <>
       <Row>
         <ToastsContainer store={ToastsStore} />
 
@@ -898,13 +905,13 @@ class Purchase extends Component {
                           PurchasseValue.status == 1 ?
                             <td>
                               <center>
-                                <i class="fa fa-check fa-lg" style={{ color: '#009345' }}></i>
+                                <i className="fa fa-check fa-lg" style={{ color: '#009345' }}></i>
                               </center>
                             </td>
                             :
                             <td>
                               <center>
-                                <i class="fa fa-times fa-lg" style={{ color: '#009345' }}></i>
+                                <i className="fa fa-times fa-lg" style={{ color: '#009345' }}></i>
                               </center>
                             </td>
                         }
@@ -971,7 +978,15 @@ class Purchase extends Component {
 
                     <FormGroup row>
                       <Col md="3">
+                        <Label htmlFor="values">VAT Registration</Label>
+                      </Col>
+                      <Col xs="12" md="9">
+                        <Input type="text" id="vat_registration" name="vat_registration" placeholder="VAT Registration" ref='clear' onChange={this.handleAddChange.bind(this)} />
+                      </Col>
+                    </FormGroup>
 
+                    <FormGroup row>
+                      <Col md="3">
                         {
                           localStorage.user_type == 'vendor' ?
                             <Label htmlFor="SuplierName">Vendor Name</Label>
@@ -980,11 +995,11 @@ class Purchase extends Component {
                         }
                       </Col>
                       <Col xs="12" md="9">
-                        {
+                        {/* {
                           localStorage.user_type == 'vendor' ?
                             <Input type="text" id="SuplierName" name="SuplierName" placeholder="Suplier Name" readOnly value={this.state.userName} />
                             :
-                            <Input type="select" id="SuplierName" name="SuplierName" placeholder="Suplier Name" value={this.state.SuplierName} onChange={this.handleChange.bind(this)}>
+                            <Input type="select" id="SuplierName" name="SuplierName" placeholder="Suplier Name" required={true} value={this.state.SuplierName} onChange={this.handleChange.bind(this)}>
                               <option value="">select</option>
                               {
                                 this.state.vendorListAll.map((vendorListValue, key) =>
@@ -992,7 +1007,15 @@ class Purchase extends Component {
                                 )
                               }
                             </Input>
-                        }
+                        } */}
+                        <Input type="select" id="SuplierName" name="SuplierName" placeholder="Suplier Name" required={true} value={this.state.SuplierName} onChange={this.handleChange.bind(this)}>
+                              <option value="">select</option>
+                              {
+                                this.state.vendorListAll.map((vendorListValue, key) =>
+                                  <option value={vendorListValue.id} key={key}> {vendorListValue.name} </option>
+                                )
+                              }
+                        </Input>
                       </Col>
                     </FormGroup>
 
@@ -1051,7 +1074,7 @@ class Purchase extends Component {
                     <FormGroup row>
                       <Col xs="12" md="3">
                         <Input type="text" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.productName || ""} />
-                        <Input type="hidden" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.id || ""} />
+                        <Input type="hidden" id="productName" name="productName" placeholder="Product Name" onChange={this.searchProduct.bind(this)} value={this.state.id} />
                       </Col>
 
                       <Col xs="12" md="1">
@@ -1083,41 +1106,35 @@ class Purchase extends Component {
                       </Col>
 
                       <Col xs="12" md="2">
-                        <Input type="text" id="productQuantity" name="productQuantity" placeholder="Quantity" ref='clear' onChange={this.handleAddChange.bind(this)} value={this.state.productQuantity} />
+                        <Input type="text" id="productQuantity" name="productQuantity" placeholder="Quantity" ref='clear' onChange={this.handleAddChange.bind(this), this.calculateTotalPrice.bind(this)} value={this.state.productQuantity || 0} />
                       </Col>
 
                       <Col xs="12" md="2">
-                        <Input type="text" id="productPrice" name="productPrice" placeholder="Price" ref='clear' onChange={this.handleAddChange.bind(this), this.calculateTotalPrice.bind(this)} value={this.state.productPrice} />
+                        <Input type="text" id="productPrice" name="productPrice" placeholder="Price" ref='clear' onChange={this.handleAddChange.bind(this), this.calculateTotalPrice.bind(this)} value={this.state.productPrice || 0} />
                       </Col>
 
                       <Col xs="12" md="2">
-                        <Input type="text" id="totalPrice" name="totalPrice" placeholder="Total Price" ref='clear' readOnly value={this.state.totalPrice} />
+                        <Input type="text" id="totalPrice" name="totalPrice" placeholder="Total Price" ref='clear' readOnly value={this.state.totalPrice || 0} />
                       </Col>
 
                       <Col xs="12" md="1">
-                        <Label htmlFor="add"> <a href="#" onClick={this.addClick.bind(this)}> <i className="fa fa-plus-square" style={{ paddingTop: '11px' }}></i>  </a> </Label>&nbsp;
-                        {/* <Label htmlFor="productName"> <a href="#"> <i className="fa fa-window-close" style={{paddingTop: '11px'}}></i> </a> </Label>                 */}
+                        <Label htmlFor="add"> <a href="#" onClick={this.addClick.bind(this)}> <i className="fa fa-plus-square" style={{ paddingTop: '11px' }}></i>  </a> </Label>                        
                       </Col>
                     </FormGroup>
 
 
 
                     <FormGroup row>
-                      <Col xs="12" md="12">
-                        {/* <table> */}
-
+                      <Col xs="12" md="12">                        
                         {
                           this.state.productListArray.length != 0 ?
-
                             this.state.productListArray.map((values, key) =>
                               <ListGroupItem key={key} tag="button" name="productName" onClick={this.handleSearchText.bind(this)} data-id={values.id} data-value={values.product_name_code} action>{values.product_name_code}</ListGroupItem>
                             ) :
                             null
-                        }
-                        {/* </table> */}
+                        }                        
                       </Col>
                     </FormGroup>
-
 
                     {
                       this.state.PurchaseList.map((purchaseValues, key1) =>
@@ -1417,6 +1434,11 @@ class Purchase extends Component {
 
       </Row>
 
+      <style jsx="true">{`
+        .modal-content {
+          margin-top: 20% !important;
+      `}</style>
+      </>
     )
   }
 }
