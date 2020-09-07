@@ -4,13 +4,16 @@
 #
 
 
-17) * need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases)
+[done] 17) * need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases) 
+             solution: database table inv_purchase, column storedBy -> 0 if admin purchases, vendorId if vendor purchases
+
 18) * need required the color info at the time of product entry if user choose a color. (see notes)
 
-21) vendor can purchase own or other 3rd party supplier.
-22) Product info and Purchase info.
 
-23) Stock Info (With new purchase from vendor). (optional vat registration field in purchase)
+[done] 21) vendor can purchase own or other 3rd party supplier. 
+[done] 23) Stock Info (With new purchase from vendor). (optional vat registration field in purchase) 
+
+22) Product info and Purchase info.
 
 
 
@@ -21,7 +24,6 @@
 
 10) News // dependency : Sajib bhai for sub-domain and server
 11) customer review (front, admin)
-
 
 19) profile image to picture, Shop/Brand Image to logo (compress image)
 20) Vendor all image (Like: banner, products, profile, brand logo) can be delete by admin.
