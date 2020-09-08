@@ -1,19 +1,22 @@
 #
-# 03-09-2020
+# 06-09-2020
 # To do
 #
+
+
+(doing) 18) * need required the color info at the time of product entry if user choose a color. (see notes)
+
+22) Product info and Purchase info.
 
 
 [done] 17) * need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases) 
              solution: database table inv_purchase, column storedBy -> 0 if admin purchases, vendorId if vendor purchases
 
-18) * need required the color info at the time of product entry if user choose a color. (see notes)
-
-
 [done] 21) vendor can purchase own or other 3rd party supplier. 
+
 [done] 23) Stock Info (With new purchase from vendor). (optional vat registration field in purchase) 
 
-22) Product info and Purchase info.
+
 
 
 

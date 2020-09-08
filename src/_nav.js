@@ -73,6 +73,16 @@ export default {
           icon: "icon-basket",
         },
         {
+          name: "Weight Type",
+          url: "/product/weight-type",
+          icon: "icon-basket",
+        },
+        {
+          name: "Weight Info",
+          url: "/product/weight-info",
+          icon: "icon-basket",
+        },
+        {
           name: "Product Specification",
           url: "/product/products-specifications",
           icon: "icon-basket",

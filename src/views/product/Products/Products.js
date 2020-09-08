@@ -44,6 +44,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
+
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
 const publicUrl = process.env.REACT_APP_PUBLIC_URL;
 
@@ -330,6 +331,7 @@ class Products extends Component {
       imageAlert: !this.state.imageAlert,
     });
   }
+
   toggleColorImageAlert() {
     this.setState({
       colorImageAlert: !this.state.colorImageAlert,
@@ -1969,6 +1971,7 @@ class Products extends Component {
 
     console.log("productDescriptionFull :", this.state.productDescriptionFull);
   }
+
   addClickForEdit() {
     console.log(
       "After clicked on Add Click & addClickForEdit is : ",
@@ -2242,7 +2245,7 @@ class Products extends Component {
       }
       imageView.push(
         <Col xs="12" md="3">
-          <label for="file-input">
+          <label htmlFor="file-input">
             {i == 3 && imagePreview3 ? (
               <img width="120" height="100" src={imagePreview3} />
             ) : i == 4 && imagePreview4 ? (
@@ -2324,7 +2327,7 @@ class Products extends Component {
         if (this.state.images[j].serialNumber == i && countImageLoop == 0) {
           imageView.push(
             <Col xs="12" md="3">
-              <label for="file-input">
+              <label htmlFor="file-input">
                 {i == 3 && imagePreview3 ? (
                   <img width="120" height="100" src={imagePreview3} />
                 ) : i == 4 && imagePreview4 ? (
@@ -2375,7 +2378,7 @@ class Products extends Component {
         ) {
           imageView.push(
             <Col xs="12" md="3">
-              <label for="file-input">
+              <label htmlFor="file-input">
                 {i == 3 && imagePreview3 ? (
                   <img width="120" height="100" src={imagePreview3} />
                 ) : i == 4 && imagePreview4 ? (
@@ -3285,6 +3288,7 @@ class Products extends Component {
   render() {
     return (
       <Row>
+
         <Col md="12">
           <Card>
             <ToastsContainer store={ToastsStore} />
@@ -3550,6 +3554,7 @@ class Products extends Component {
           </Card>
         </Col>
 
+        {/* AUTHORIZE MODAL START */}
         <Modal
           isOpen={this.state.small}
           toggle={this.toggleSmall}
@@ -3637,7 +3642,8 @@ class Products extends Component {
           </ModalFooter>
         </Modal>
 
-        {/* EDIT MODAL STARTED */}
+
+        {/* EDIT MODAL START */}
         <Modal
           isOpen={this.state.editLarge}
           toggle={this.toggleEditLarge}
@@ -3753,7 +3759,7 @@ class Products extends Component {
                                 id="pVendor"
                                 name="pVendor"
                                 placeholder=""
-                                readOnly="true"
+                                readOnly={true}
                                 value={this.state.pvName}
                               />
                             </Col>
@@ -3806,7 +3812,7 @@ class Products extends Component {
                                     id="pSKU"
                                     name="pSKU"
                                     placeholder="Product SKU"
-                                    readOnly="true"
+                                    readOnly={true}
                                     value={this.state.pSKU}
                                   />
                                 </Col>
@@ -3826,7 +3832,7 @@ class Products extends Component {
                                     id="pSKU"
                                     name="pSKU"
                                     placeholder="Product SKU"
-                                    readOnly="true"
+                                    readOnly={true}
                                     value={this.state.pSKU}
                                   />
                                 </Col>
@@ -3946,8 +3952,9 @@ class Products extends Component {
             </Row>
           </ModalBody>
         </Modal>
-        {/* EDIT MODAL END */}
+        
 
+        {/* ADD NEW PRODUCT MODAL START */}
         <Modal
           style={{ Width: "120% !important", right: "15% !important" }}
           isOpen={this.state.large}
@@ -4068,7 +4075,7 @@ class Products extends Component {
                                 id="vendorId"
                                 name="vendorId"
                                 placeholder=""
-                                readOnly="true"
+                                readOnly={true}
                                 value={this.state.userName}
                               />
                             </Col>
@@ -4123,7 +4130,7 @@ class Products extends Component {
                                     id="productSKU"
                                     name="productSKU"
                                     placeholder="Product SKU"
-                                    readOnly="true"
+                                    readOnly={true}
                                     value=/*{'BNJ-'+this.state.userCode+'-'+this.state.newProductCode}*/ {
                                       this.state.productSKUcode
                                     }
@@ -4145,7 +4152,7 @@ class Products extends Component {
                                     id="productSKU"
                                     name="productSKU"
                                     placeholder="Product SKU"
-                                    readOnly="true"
+                                    readOnly={true}
                                     value={this.state.productSKUcode}
                                   />
                                 </Col>
@@ -4222,6 +4229,8 @@ class Products extends Component {
   </ModalFooter> */}
         </Modal>
 
+
+        {/* SIZE MODAL START */}
         <Modal
           isOpen={this.state.successSize}
           toggle={this.toggleSuccessSize}
@@ -4259,6 +4268,8 @@ class Products extends Component {
           </ModalFooter>
         </Modal>
 
+
+        {/* COLOR MODAL START */}
         <Modal
           isOpen={this.state.successColor}
           toggle={this.toggleSuccessColor}
@@ -4334,7 +4345,7 @@ class Products extends Component {
           </ModalFooter>
         </Modal>
 
-        {/* Image Alert */}
+        {/* IMAGE ALERT MODAL START */}
         <Modal
           isOpen={this.state.imageAlert}
           toggle={this.toggleImageAlert}
@@ -4354,6 +4365,7 @@ class Products extends Component {
           </ModalBody>
         </Modal>
 
+        {/* ALERT MODAL START */}
         <Modal
           isOpen={this.state.colorImageAlert}
           toggle={this.toggleColorImageAlert}
@@ -4372,6 +4384,7 @@ class Products extends Component {
             jpg/jpeg/png
           </ModalBody>
         </Modal>
+      
       </Row>
     );
   }

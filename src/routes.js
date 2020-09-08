@@ -51,6 +51,8 @@ const Categories = React.lazy(() => import('./views/product/Categories'));
 const ColorInfos = React.lazy(() => import('./views/product/ColorInfos'));
 const SizeType = React.lazy(() => import('./views/product/SizeType'));
 const SizeInfo = React.lazy(() => import('./views/product/SizeInfos'));
+const WeightType = React.lazy(() => import('./views/product/WeightType'));
+const WeightInfo = React.lazy(() => import('./views/product/WeightInfos'));
 const ProductSpecifications = React.lazy(() => import('./views/product/ProductSpecifications'));
 const ProductSpecificationDetails = React.lazy(() => import('./views/product/ProductSpecificationDetails'));
 
@@ -101,6 +103,8 @@ const routes = [
   { path: '/product/color-infos', name: 'Color Info', component: ColorInfos },
   { path: '/product/size-type', name: 'Size Type', component: SizeType },
   { path: '/product/size-info', name: 'Size Info', component: SizeInfo },
+  { path: '/product/weight-type', name: 'Weight Type', component: WeightType },
+  { path: '/product/weight-info', name: 'Weight Info', component: WeightInfo },
 
   { path: '/product/products-specifications', name: 'ProductSpecifications', component: ProductSpecifications },
   { path: '/product/products-specification-details', name: 'ProductSpecificationDetails', component: ProductSpecificationDetails },

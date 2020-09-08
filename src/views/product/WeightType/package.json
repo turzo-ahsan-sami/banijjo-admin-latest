@@ -1,0 +1,6 @@
+{
+  "name": "WeightType",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./WeightType.js"
+}
