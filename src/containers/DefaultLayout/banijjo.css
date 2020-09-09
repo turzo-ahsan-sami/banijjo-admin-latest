@@ -12,6 +12,11 @@
   color: white !important;
 }
 
+.nav-dropdown-items {
+  padding-left: 10px !important;
+}
+
+
 @media (min-width: 992px) {
   
   .nav-dropdown-items {

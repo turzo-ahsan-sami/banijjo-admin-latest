@@ -278,6 +278,123 @@ routes.get('/deleteWeightInfo', verifyToken, async function (req, res) {
 */
 
 
+/*
+** START
+** Product -> Specificaton 
+*/
+
+routes.get('/product_specification_names', (req, res) => {
+  dbConnection.query('SELECT product_specification_names.id AS id, product_specification_names.specification_name AS specification_name, product_specification_names.specification_type AS specification_type, product_specification_names.category_id AS category_id, product_specification_names.type AS type, category.category_name AS category_name FROM product_specification_names JOIN category ON product_specification_names.category_id = category.id WHERE product_specification_names.status = 1 AND product_specification_names.softDel = 0 ORDER BY product_specification_names.id DESC', function (error, results, fields) {
+    console.log(results);
+    if (error) throw error;
+    return res.send({ error: error, data: results, message: 'sepecification name list.' });
+  });
+});
+
+routes.post('/saveSpecification', verifyToken, (req, res) => {
+  jwt.verify(req.token, 'secretkey', (err, authData) => {
+    if (err) {
+      res.status(403).send({ success: false, message: 'jwt expired', status: '403' });
+    }
+    else {
+      try {
+        // console.log(req.body.specification); return; specification_type
+        
+        // color
+        if (req.body.specification == "Color") {
+          if (req.body.isUpdateClicked == true) {
+            var sql_query =
+              "UPDATE product_specification_names SET specification_name = '" +
+              req.body.specification +
+              "', category_id = '" +
+              req.body.categoryId +
+              "', specification_type = '" +
+              req.body.specification +
+              "', type = 0, status = 1 WHERE id = " +
+              req.body.editID;
+          } else {
+            var sql_query =
+              "INSERT INTO product_specification_names (specification_name, category_id, specification_type, type, status) VALUES ('" +
+              req.body.specification +
+              "', '" +
+              req.body.categoryId +
+              "', '" +
+              req.body.specification +
+              "', 0, '1' )";
+          }
+          dbConnection.query(sql_query, function (err, result) {
+            return (result) ? res.send({ success: true, server_message: result }) : res.send({ success: false, error: err })
+            // if (result)
+            //   return res.send({ success: true, server_message: result });
+            // else return res.send({ success: false, error: err });
+          });
+        }
+        // weight or size
+        else {
+          if (req.body.isUpdateClicked == true) {
+            var sql_query =
+              "UPDATE product_specification_names SET specification_name = '" +
+              req.body.specificationName +
+              "', category_id = '" +
+              req.body.categoryId +
+              "', specification_type = '" +
+              req.body.specification +
+              "', type = '" +
+              req.body.specificationType +
+              "', status = 1 WHERE id = " +
+              req.body.editID;
+          } else {
+            var sql_query =
+              "INSERT INTO product_specification_names (specification_name, category_id, specification_type, type, status) VALUES ('" +
+              req.body.specificationName +
+              "', '" +
+              req.body.categoryId +
+              "', '" +
+              req.body.specification +
+              "', '" +
+              req.body.specificationType +
+              "', '1' )";
+          }
+          console.log(sql_query)
+          dbConnection.query(sql_query, function (err, result) {
+            console.log(err)
+            return (result) ? res.send({ success: true, server_message: result }) : res.send({ success: false, error: err })
+            // if (result)
+            //   return res.send({ success: true, server_message: result });
+            // else return res.send({ success: false, error: err });
+          });
+        }
+      }
+      catch (error) {
+        if (error) return res.send({ success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request: req.body });
+      }
+    }
+  });
+});
+
+routes.get('/deleteProductSpecificationName', verifyToken, async function (req, res) {
+  jwt.verify(req.token, 'secretkey', async function (err, authData) {
+    if (err) {
+      res.status(403).send({success: false, message: 'jwt expired', status: '403'});
+    }
+    else {
+      try {
+        const delete_product_specification_names = await query ('UPDATE product_specification_names SET softDel = 1, status = "deactive" WHERE id = '+ req.query.id);
+        return res.send({ success: true, message: 'Data Deleted Succesfully' });
+      } catch (e) {
+        console.log(e);
+        return res.send({ success: false, message: 'Data Deletion Failed' });
+      }
+    }
+  });
+});
+
+/*
+** END
+** Product -> Specificaton 
+*/
+
+
 // Purchase
 
 routes.post("/saveProductPurchase", async function (req, res) {

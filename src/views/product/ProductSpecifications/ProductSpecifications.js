@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import {ToastsContainer, ToastsStore} from 'react-toasts';
-import cookie from 'react-cookies';
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import { ToastsContainer, ToastsStore } from "react-toasts";
+import cookie from "react-cookies";
 
 import "./tag.scss";
-import {logoutFunction} from '../../DynamicLogout/Logout';
+import { logoutFunction } from "../../DynamicLogout/Logout";
 
 import {
   Badge,
@@ -14,7 +14,10 @@ import {
   CardFooter,
   CardHeader,
   Col,
-  Pagination, PaginationItem, PaginationLink, Table,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  Table,
   Collapse,
   DropdownItem,
   DropdownMenu,
@@ -31,7 +34,11 @@ import {
   InputGroupText,
   Label,
   Row,
-} from 'reactstrap';
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
 
 class ProductSpecifications extends Component {
@@ -48,62 +55,70 @@ class ProductSpecifications extends Component {
       productsCategory: [],
       productsActualCategory: [],
       productsSpecificationDetails: [],
-      specificationDetails : [],
+      specificationDetails: [],
       ProductSpecificationValues: [],
       ProductSpecificationValuesArray: [],
-      tags: '',
+      tags: "",
       collapse: true,
       fadeIn: true,
       timeout: 300,
       sizeType: [],
-      specificationName: '',
-      editID: '',
+      weightType: [],
+      specificationName: "",
+      editID: "",
       isUpdateClicked: false,
-      specificationType: '',
-      categoryId: '',
-      type:'',
-      isChecking: false
+      specificationType: "",
+      categoryId: "",
+      type: "",
+      isChecking: false,
+
+      small: false,
+      specId: 0,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleProductChange = this.handleProductChange.bind(this);
 
     this.handleGetEditForm = this.handleGetEditForm.bind(this);
+    this.toggleSmall = this.toggleSmall.bind(this);
   }
 
-  handleReset () {
-      window.location = '/product/products-specifications';
+  handleReset() {
+    window.location = "/product/products-specifications";
   }
 
-  handleGetEditForm (event) {
-      this.setState({
-          editID: event.currentTarget.dataset['id']
-      });
+  handleGetEditForm(event) {
+    this.setState({
+      editID: event.currentTarget.dataset["id"],
+    });
 
-      fetch(base+`/api/getProductSpecificationData/?id=${event.currentTarget.dataset['id']}`, {
-        method: 'GET'
+    fetch(
+      base +
+        `/api/getProductSpecificationData/?id=${event.currentTarget.dataset["id"]}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((res) => {
+        return res.json();
       })
-      .then(res => {
-        return res.json()
-      })
-      .then(vatTax => {
-        console.log(vatTax.data);
-
-        if (vatTax.success ==true) {
-
-            this.setState ({
-                specificationType: vatTax.data[0].type,
-                categoryId: vatTax.data[0].category_id,
-                isUpdateClicked: true,
-                specification: vatTax.data[0].type != 0 ? "Others" : "",
-                isChecking: true
-            });
-        }
-        else {
-            ToastsStore.warning(vatTax.message);
+      .then((specs) => {
+        console.log(specs.data);
+        if (specs.success == true) {
+          this.setState({
+            // specificationType: specs.data[0].type,
+            specificationType: specs.data[0].specification_type,
+            categoryId: specs.data[0].category_id,
+            isUpdateClicked: true,
+            // specification: specs.data[0].type != 0 ? "Others" : "",
+            specification: specs.data[0].specification_type,
+            isChecking: true,
+          });
+        } else {
+          ToastsStore.warning(specs.message);
         }
 
-        console.log('States Value : ', this.state);
+        console.log("States Value : ", this.state);
 
         return false;
       });
@@ -114,412 +129,607 @@ class ProductSpecifications extends Component {
   }
 
   toggleFade() {
-    this.setState((prevState) => { return { fadeIn: !prevState }});
+    this.setState((prevState) => {
+      return { fadeIn: !prevState };
+    });
   }
 
   componentDidMount() {
-    const userName = localStorage.getItem('userName');
-    const userPassword = localStorage.getItem('userPassword');
-    if(userName===null && userPassword === null)
-    {
+    const userName = localStorage.getItem("userName");
+    const userPassword = localStorage.getItem("userPassword");
+    if (userName === null && userPassword === null) {
       this.props.history.push("/login");
     }
 
-    fetch(base+'/api/categories', {
-      method: 'GET'
+    fetch(base + "/api/categories", {
+      method: "GET",
     })
-    .then(res => {
-      console.log(res);
-      return res.json()
-    })
-    .then(category => {
-      console.log(category.data);
-      this.setState({
-        productsActualCategory : category.data
+      .then((res) => {
+        console.log(res);
+        return res.json();
       })
+      .then((category) => {
+        console.log(category.data);
+        this.setState({
+          productsActualCategory: category.data,
+        });
 
-      return false;
-    });
+        return false;
+      });
 
-    fetch(base+'/api/getSizeType', {
-      method: 'GET'
+    fetch(base + "/api/getSizeType", {
+      method: "GET",
     })
-    .then(res => {
-      console.log(res);
-      return res.json()
-    })
-    .then(sizeType => {
-      console.log(sizeType.data);
-      this.setState({
-        sizeType : sizeType.data
+      .then((res) => {
+        console.log(res);
+        return res.json();
       })
+      .then((sizeType) => {
+        console.log(sizeType.data);
+        this.setState({
+          sizeType: sizeType.data,
+        });
 
-      return false;
-    });
+        return false;
+      });
 
-    console.log('Check Check : ');
-
-    fetch(base+'/api/specialCategoryListForSpecification', {
-      method: 'GET'
+    fetch(base + "/apiv2/getWeightType", {
+      method: "GET",
+      headers: { Authorization: "Atiq " + cookie.load("token") },
     })
-    .then(res => {
-      console.log('Response From Special Category : ', res);
-      return res.json()
-    })
-    .then(category => {
-      let categoryList = [];
-      console.log('Category List Name : ');
-      console.log('Category List : ', category.data);
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
+      .then((weightType) => {
+        console.log(weightType.data);
+        this.setState({
+          weightType: weightType.data,
+        });
 
-      for ( let i = 0; i < category.data.length; i++) {
-        if (category.data[i] != null) {
-          categoryList[i] = category.data[i];
+        return false;
+      });
+
+    console.log("Check Check : ");
+
+    fetch(base + "/api/specialCategoryListForSpecification", {
+      method: "GET",
+    })
+      .then((res) => {
+        console.log("Response From Special Category : ", res);
+        return res.json();
+      })
+      .then((category) => {
+        let categoryList = [];
+        console.log("Category List Name : ");
+        console.log("Category List : ", category.data);
+
+        for (let i = 0; i < category.data.length; i++) {
+          if (category.data[i] != null) {
+            categoryList[i] = category.data[i];
+          }
         }
-      }
 
-      console.log('Category List updated : ', categoryList);
+        console.log("Category List updated : ", categoryList);
 
-      this.setState({
-        productsCategory : categoryList
-      })
+        this.setState({
+          productsCategory: categoryList,
+        });
 
-      console.log('Category List final state : ', categoryList);
+        console.log("Category List final state : ", categoryList);
 
-      return false;
-    });
+        return false;
+      });
 
-    fetch(base+'/api/product_specification_names', {
-      method: 'GET'
+    fetch(base + "/apiv2/product_specification_names", {
+      method: "GET",
     })
-    .then(res => {
-      console.log(res);
-      return res.json()
-    })
-    .then(specificationName => {
-      console.log('product_specification_names : ', specificationName.data);
-      this.setState({
-        productsSpecificationDetails : specificationName.data
+      .then((res) => {
+        console.log(res);
+        return res.json();
       })
-      console.log('Specification : ', this.state.productsSpecificationDetails)
-      return false;
-    });
+      .then((specificationName) => {
+        this.setState({
+          productsSpecificationDetails: specificationName.data,
+        });
+        return false;
+      });
   }
 
-  handleAddTags (event) {
+  handleAddTags(event) {
     console.log(event.target.value);
 
     this.setState({
-      tags: event.target.value
+      tags: event.target.value,
     });
 
     console.log("Tag : ", this.state.Tags);
-
-
   }
 
   handleProductChange(event) {
-
     let target = event.target;
-    let value = target.type === 'checkbox' ? target.checked : target.value;
+    let value = target.type === "checkbox" ? target.checked : target.value;
     let name = target.name;
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
 
-    if (this.state.specification == 'Others') {
+    if (this.state.specification == "Size") {
       for (var i = 0; i < this.state.sizeType.length; i++) {
         if (this.state.sizeType[i].id == value) {
           this.setState({
-            specificationName: this.state.sizeType[i].name
-          })
+            specificationName: this.state.sizeType[i].name,
+          });
         }
       }
-
     }
+    if (this.state.specification == "Weight") {
+      for (var i = 0; i < this.state.weightType.length; i++) {
+        if (this.state.weightType[i].id == value) {
+          this.setState({
+            specificationName: this.state.weightType[i].name,
+          });
+        }
+      }
+    }
+    // if (this.state.specification == "Others") {
+    //   for (var i = 0; i < this.state.sizeType.length; i++) {
+    //     if (this.state.sizeType[i].id == value) {
+    //       this.setState({
+    //         specificationName: this.state.sizeType[i].name,
+    //       });
+    //     }
+    //   }
+    // }
 
     if (this.state.isUpdateClicked == true) {
-        // this.setState({
-        //     isChecking: true
-        // })
+      // this.setState({
+      //     isChecking: true
+      // })
     }
 
-    console.log(name+' : '+value);
+    console.log(name + " : " + value);
   }
 
-  handleAddValues (event) {
-
+  handleAddValues(event) {
     this.setState({
       // ProductSpecificationValuesArray: this.state.ProductSpecificationValues
     });
 
-    this.state.ProductSpecificationValuesArray.push(this.state.ProductSpecificationValues);
+    this.state.ProductSpecificationValuesArray.push(
+      this.state.ProductSpecificationValues
+    );
 
     // this.ProductSpecificationValArray.push(this.state.ProductSpecificationValues);
 
     ReactDOM.findDOMNode(this.refs.clear).value = "";
   }
 
-  handleAddChange (event) {
+  handleAddChange(event) {
     this.setState({ ProductSpecificationValues: event.target.value });
-  }
-
-  handleDeleteButton (keyId) {
-    console.log("Key for delete:",keyId);
-
-    let ProductSpecificationValuesArray = this.state.ProductSpecificationValuesArray.filter((e, i) => i !== keyId);
-    this.setState({ ProductSpecificationValuesArray : ProductSpecificationValuesArray });
-
-    console.log(this.state.ProductSpecificationValuesArray);
-
   }
 
   handleSubmit(event) {
     console.log(this.state);
     event.preventDefault();
 
-    fetch(base+'/api/saveSpecification' , {
+    fetch(base + "/apiv2/saveSpecification", {
       method: "POST",
       headers: {
-        'Content-type': 'application/json',
-        'Authorization': 'Atiq '+cookie.load('token')
+        "Content-type": "application/json",
+        Authorization: "Atiq " + cookie.load("token"),
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(this.state),
     })
-    .then((result) => result.json())
-    .then((info) => {
-      if (info.success == true) {
-        ToastsStore.success("Product Specification Successfully inserted !!");
-        console.log(info);
-        setTimeout(
-          function() {
-          // this.props.history.push("/product/products");
-          window.location = '/product/products-specifications';
-          }
-          .bind(this),
-          3000
-        );
-      }
-      else {
-
-        if (info.status == 403) {
+      .then((result) => result.json())
+      .then((info) => {
+        if (info.success == true) {
+          ToastsStore.success("Product Specification Successfully inserted !!");
           console.log(info);
+          setTimeout(
+            function () {
+              // this.props.history.push("/product/products");
+              window.location = "/product/products-specifications";
+            }.bind(this),
+            3000
+          );
+        } else {
+          if (info.status == 403) {
+            console.log(info);
 
-          ToastsStore.warning('Your session is expired. Please Login again');
+            ToastsStore.warning("Your session is expired. Please Login again");
 
-          setTimeout(()=> {
-            logoutFunction(localStorage.userName);
-          }, 1000);
-
+            setTimeout(() => {
+              logoutFunction(localStorage.userName);
+            }, 1000);
+          } else {
+            ToastsStore.warning("Product Insertion Faild. Please try again !!");
+            console.log(info.success);
+          }
         }
-        else {
-          ToastsStore.warning("Product Insertion Faild. Please try again !!");
-          console.log(info.success);
-        }
-
-      }
-
-    })
+      });
   }
 
   handleRadioButton(event) {
     // console.log(event.target.value);
   }
 
-  render() {
+  deleteItem(event) {
+    console.log("Delete Id : ", event.currentTarget.dataset["id"]);
+    this.setState({
+      small: !this.state.small,
+      specId: event.currentTarget.dataset["id"],
+    });
+  }
 
+  toggleSmall(event) {
+    if (event == "Yes") {
+      console.log("Permitted");
+      fetch(
+        base + `/apiv2/deleteProductSpecificationName/?id=${this.state.specId}`,
+        {
+          method: "GET",
+          headers: { Authorization: "Atiq " + cookie.load("token") },
+        }
+      )
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((infos) => {
+          console.log("Data : ", infos);
+
+          if (infos.success == true) {
+            ToastsStore.success(infos.message);
+            setTimeout(
+              function () {
+                window.location = "/product/products-specifications";
+              }.bind(this),
+              1000
+            );
+          } else {
+            if (infos.status == 403) {
+              console.log(infos);
+              ToastsStore.warning(
+                "Your session is expired. Please Login again"
+              );
+              setTimeout(() => {
+                logoutFunction(localStorage.userName);
+              }, 1000);
+            } else {
+              ToastsStore.warning(infos.message);
+              setTimeout(() => {
+                this.setState({
+                  small: !this.state.small,
+                });
+              }, 1000);
+            }
+          }
+          return false;
+        });
+    } else {
+      this.setState({
+        small: !this.state.small,
+      });
+    }
+  }
+
+  render() {
     return (
       <Row>
-        <ToastsContainer store={ToastsStore}/>
-      <Col xs="12" md="6">
-        <Card>
-          <CardHeader>
-            {
-                this.state.isUpdateClicked == true ?
+        <ToastsContainer store={ToastsStore} />
+        <Col xs="12" md="6">
+          <Card>
+            <CardHeader>
+              {this.state.isUpdateClicked == true ? (
                 <strong>Update Product Specification</strong>
-                :
+              ) : (
                 <strong>Add Product Specification</strong>
-            }
-
-          </CardHeader>
-          <CardBody>
-            <Form action="" method="post" onSubmit={this.handleSubmit} onChange={this.handleProductChange} encType="multipart/form-data" className="form-horizontal">
-              {/* <FormGroup row>
-                <Col md="3">
-                  <Label htmlFor="name">Specification Name</Label>
-                </Col>
-                <Col xs="12" md="9">
-                  <Input type="text" id="name" name="name" placeholder="Name" required="true" />
-                </Col>
-              </FormGroup>
-
-              <FormGroup row>
-                <Col md="3">
-                  <Label htmlFor="values">Specification Vales</Label>
-                </Col>
-                <Col xs="12" md="7">
-                  <Input type="text" id="values" name="values" placeholder="values" ref='clear' onChange={this.handleAddChange.bind(this)} />
-                </Col>
-                <Col xs="12" md="2">
-                  <Button block color="ghost-primary" onClick={this.handleAddValues.bind(this)}> Add </Button>
-                </Col>
-
-              </FormGroup>
-
-              <FormGroup row>
-                <Col md="3">
-                  &nbsp;
-                </Col>
-
-                <Col xs="12" md="9">
-                  <div row>
-                    {
-                      this.state.ProductSpecificationValuesArray.map((ProductSpecificationVal, key) =>
-
-                        <Button style={{paddingLeft:"10px",marginLeft:"10px"}} className="btn-pill btn btn-dark" type="button" size="sm" color="primary" id="tagButton" value={key} onClick={this.handleDeleteButton.bind(this,key)}> {ProductSpecificationVal} <i style={{color:'red'}} className="fa fa-close"></i> </Button>
-
-                      )
-                    }
-                  </div>
-                </Col>
-              </FormGroup> */}
-
-              <FormGroup row>
-                <Col md="3">
-                  <Label htmlFor="select">Pick The Specification</Label>
-                </Col>
-                {
-                    this.state.isUpdateClicked == true ?
-                    <Col xs="12" md="9">
-                      <span style={{marginLeft: "20px"}}> <Input type="radio" name="specification" value="Color" checked={this.state.specificationType == 0? this.state.isChecking : ""} /> Color</span>
-
-                      <span style={{marginLeft: "20px"}}> <Input type="radio" name="specification" value="Others" checked={this.state.specificationType != 0? this.state.isChecking : ""} /> Others</span>
-                    </Col>
-                    :
-                    <Col xs="12" md="9">
-                      <span style={{marginLeft: "20px"}}> <Input type="radio" name="specification" value="Color" /> Color</span>
-
-                      <span style={{marginLeft: "20px"}}> <Input type="radio" name="specification" value="Others" /> Others</span>
-                    </Col>
-                }
-              </FormGroup>
-
-              {
-                this.state.specification == 'Others' ?
+              )}
+            </CardHeader>
+            <CardBody>
+              <Form
+                action=""
+                method="post"
+                onSubmit={this.handleSubmit}
+                onChange={this.handleProductChange}
+                encType="multipart/form-data"
+                className="form-horizontal"
+              >
                 <FormGroup row>
                   <Col md="3">
-                    <Label htmlFor="categoryId">specification Name</Label>
+                    <Label htmlFor="select">Pick The Specification</Label>
+                  </Col>
+                  {this.state.isUpdateClicked == true ? (
+                    <Col xs="12" md="9">
+                      <span style={{ marginLeft: "30px" }}>
+                        {" "}
+                        <Input
+                          type="radio"
+                          name="specification"
+                          value="Color"
+                          checked={
+                            this.state.specification == "Color"
+                              ? this.state.isChecking
+                              : ""
+                          }
+                        />{" "}
+                        Color
+                      </span>
+
+                      <span style={{ marginLeft: "30px" }}>
+                        {" "}
+                        <Input
+                          type="radio"
+                          name="specification"
+                          value="Size"
+                          checked={
+                            this.state.specification == "Size"
+                              ? this.state.isChecking
+                              : ""
+                          }
+                        />{" "}
+                        Size
+                      </span>
+
+                      <span style={{ marginLeft: "30px" }}>
+                        {" "}
+                        <Input
+                          type="radio"
+                          name="specification"
+                          value="Weight"
+                          checked={
+                            this.state.specification == "Weight"
+                              ? this.state.isChecking
+                              : ""
+                          }
+                        />{" "}
+                        Weight
+                      </span>
+                    </Col>
+                  ) : (
+                    <Col xs="12" md="9">
+                      <span style={{ marginLeft: "30px" }}>
+                        {" "}
+                        <Input
+                          type="radio"
+                          name="specification"
+                          value="Color"
+                        />
+                        Color
+                      </span>
+
+                      <span style={{ marginLeft: "30px" }}>
+                        {" "}
+                        <Input type="radio" name="specification" value="Size" />
+                        Size
+                      </span>
+
+                      <span style={{ marginLeft: "30px" }}>
+                        {" "}
+                        <Input
+                          type="radio"
+                          name="specification"
+                          value="Weight"
+                        />
+                        Weight
+                      </span>
+                    </Col>
+                  )}
+                </FormGroup>
+
+                <>
+                  {this.state.specification == "Size" ? (
+                    <FormGroup row>
+                      <Col md="3">
+                        <Label htmlFor="categoryId">Size Type</Label>
+                      </Col>
+                      <Col xs="12" md="9">
+                        <Input
+                          type="select"
+                          name="specificationType"
+                          id="specificationType"
+                          value={this.state.specificationType}
+                        >
+                          <option value="0">Please select</option>
+                          {this.state.sizeType.map((sizeTypeValue, key) => (
+                            <option value={sizeTypeValue.id}>
+                              {" "}
+                              {sizeTypeValue.name}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                      </Col>
+                    </FormGroup>
+                  ) : null}
+
+                  {this.state.specification == "Weight" ? (
+                    <FormGroup row>
+                      <Col md="3">
+                        <Label htmlFor="categoryId">Weight Type</Label>
+                      </Col>
+                      <Col xs="12" md="9">
+                        <Input
+                          type="select"
+                          name="specificationType"
+                          id="specificationType"
+                          value={this.state.specificationType}
+                        >
+                          <option value="0">Please select</option>
+                          {this.state.weightType.map((weightTypeValue, key) => (
+                            <option value={weightTypeValue.id}>
+                              {" "}
+                              {weightTypeValue.name}{" "}
+                            </option>
+                          ))}
+                        </Input>
+                      </Col>
+                    </FormGroup>
+                  ) : null}
+                </>
+
+                <FormGroup row>
+                  <Col md="3">
+                    <Label htmlFor="categoryId">Product Category</Label>
                   </Col>
                   <Col xs="12" md="9">
-                    <Input type="select" name="specificationType" id="specificationType" value={this.state.specificationType}>
+                    <Input
+                      type="select"
+                      name="categoryId"
+                      id="categoryId"
+                      value={this.state.categoryId}
+                    >
                       <option value="0">Please select</option>
-                      {
-                        this.state.sizeType.map((sizeTypeValue, key) =>
-                          <option value={sizeTypeValue.id}> {sizeTypeValue.name} </option>
+                      {this.state.productsCategory.map(
+                        (productsCategoryValue, key) => (
+                          <option value={key} key={key}>
+                            {" "}
+                            {productsCategoryValue}{" "}
+                          </option>
                         )
-                      }
+                      )}
                     </Input>
                   </Col>
                 </FormGroup>
-                :
-                null
-              }
 
-              <FormGroup row>
-                <Col md="3">
-                  <Label htmlFor="categoryId">Product Category</Label>
-                </Col>
-                <Col xs="12" md="9">
-                  <Input type="select" name="categoryId" id="categoryId" value={this.state.categoryId}>
-                    <option value="0">Please select</option>
-                    {
-                      this.state.productsCategory.map((productsCategoryValue, key) =>
-                        <option value={key}> {productsCategoryValue} </option>
-                      )
-                    }
-                  </Input>
-                </Col>
-              </FormGroup>
+                <FormGroup row>
+                  <Col md="3">
+                    <Label htmlFor="select">Status</Label>
+                  </Col>
+                  <Col xs="12" md="9">
+                    <Input type="select" name="select" id="select">
+                      <option value="2">Active</option>
+                      <option value="3">Inactive</option>
+                    </Input>
+                  </Col>
+                </FormGroup>
+                <center>
+                  {this.state.isUpdateClicked == true ? (
+                    <Button type="submit" size="sm" color="success">
+                      <i className="fa fa-dot-circle-o"></i> Update
+                    </Button>
+                  ) : (
+                    <Button type="submit" size="sm" color="success">
+                      <i className="fa fa-dot-circle-o"></i> Submit
+                    </Button>
+                  )}
+                  &nbsp;
+                  <Button
+                    type="reset"
+                    size="sm"
+                    color="danger"
+                    onClick={this.handleReset}
+                  >
+                    <i className="fa fa-ban"></i> Reset
+                  </Button>
+                </center>
+              </Form>
+            </CardBody>
+            <CardFooter></CardFooter>
+          </Card>
+        </Col>
 
-              <FormGroup row>
-                <Col md="3">
-                  <Label htmlFor="select">Status</Label>
-                </Col>
-                <Col xs="12" md="9">
-                  <Input type="select" name="select" id="select">
-                    <option value="2">Active</option>
-                    <option value="3">Inactive</option>
-                  </Input>
-                </Col>
-              </FormGroup>
-              <center>
-                {
-                    this.state.isUpdateClicked == true ?
-                    <Button type="submit" size="sm" color="success"><i className="fa fa-dot-circle-o"></i> Update</Button>
-                    :
-                    <Button type="submit" size="sm" color="success"><i className="fa fa-dot-circle-o"></i> Submit</Button>
-                }
-                &nbsp;
-                <Button type="reset" size="sm" color="danger" onClick={this.handleReset}><i className="fa fa-ban"></i> Reset</Button>
-              </center>
-
-            </Form>
-          </CardBody>
-          <CardFooter>
-
-          </CardFooter>
-        </Card>
-      </Col>
-
-      <Col xs="12" lg="6">
-            <Card>
-              <CardHeader>
-                <i className="fa fa-align-justify"></i> Product Specification List
-              </CardHeader>
-              <CardBody>
-                <Table responsive bordered>
-                  <thead>
+        <Col xs="12" lg="6">
+          <Card>
+            <CardHeader>
+              <i className="fa fa-align-justify"></i> Product Specification List
+            </CardHeader>
+            <CardBody>
+              <Table responsive bordered>
+                <thead>
                   <tr>
+                    <th>Specification Type</th>
                     <th>Specification Name</th>
-                    <th>Specification Category</th>
+                    <th>Product Category</th>
                     <th>Action</th>
                   </tr>
-                  </thead>
-                  <tbody>
-
-                  {
-                    this.state.productsSpecificationDetails.map((productsSpecificationDetailsValue, key) =>
-                      <tr>
-                        <td>{productsSpecificationDetailsValue.specification_name}</td>
-                        <td>{productsSpecificationDetailsValue.category_name}</td>
+                </thead>
+                <tbody>
+                  {this.state.productsSpecificationDetails.map(
+                    (productsSpecificationDetailsValue, key) => (
+                      <tr key={key}>
+                        <td>
+                          {productsSpecificationDetailsValue.specification_type}
+                        </td>
+                        <td>
+                          {productsSpecificationDetailsValue.specification_name}
+                        </td>
+                        <td>
+                          {productsSpecificationDetailsValue.category_name}
+                        </td>
                         <td>
                           <center>
-                          <a href="#">
-                              <i className="fa fa-edit fa-lg"  title="Edit Details Info" aria-hidden="true" style={{color: '#009345'}} data-id={productsSpecificationDetailsValue.id} onClick={this.handleGetEditForm.bind(this)}></i>
-                          </a>&nbsp;
-                            <a href="#" id="deleteIds" ref="dataIds" data-id={productsSpecificationDetailsValue.id}>
-                              <i className="fa fa-trash fa-lg" title="Delete colors" aria-hidden="true" style={{color: '#EB1C22'}}></i>
+                            <a href="#">
+                              <i
+                                className="fa fa-edit fa-lg"
+                                title="Edit Details Info"
+                                aria-hidden="true"
+                                style={{ color: "#009345" }}
+                                data-id={productsSpecificationDetailsValue.id}
+                                onClick={this.handleGetEditForm.bind(this)}
+                              ></i>
+                            </a>
+                            &nbsp;
+                            <a
+                              href="#"
+                              onClick={this.deleteItem.bind(this)}
+                              id="deleteIds"
+                              ref="dataIds"                      
+                              data-id={productsSpecificationDetailsValue.id}
+                            >
+                              <i
+                                className="fa fa-trash fa-lg"
+                                title="Delete colors"
+                                aria-hidden="true"
+                                style={{ color: "#EB1C22" }}
+                              ></i>
                             </a>
                           </center>
                         </td>
                       </tr>
                     )
-                  }
-
-                  </tbody>
-                </Table>
-
-              </CardBody>
-            </Card>
-          </Col>
-
-
-    </Row>
-
-    )
+                  )}
+                </tbody>
+              </Table>
+            </CardBody>
+          </Card>
+        </Col>
+      
+                      
+        <Modal
+          isOpen={this.state.small}
+          toggle={this.toggleSmall}
+          className={"modal-sm " + this.props.className}
+        >
+          <ToastsContainer store={ToastsStore} />
+          <ModalHeader toggle={this.toggleSmall}>
+            Delete Product Specification
+          </ModalHeader>
+          <ModalBody>Are You Sure To Delete This Specification ?</ModalBody>
+          <ModalFooter>
+            <Button
+              color="success"
+              onClick={(e) => {
+                this.toggleSmall("Yes");
+              }}
+            >
+              Yes
+            </Button>{" "}
+            <Button
+              color="danger"
+              onClick={(e) => {
+                this.toggleSmall("No");
+              }}
+            >
+              No
+            </Button>
+          </ModalFooter>
+        </Modal>
+      
+      </Row>
+    );
   }
 }
-
-
 
 export default ProductSpecifications;

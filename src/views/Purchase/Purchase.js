@@ -563,7 +563,7 @@ class Purchase extends Component {
     event.preventDefault();
     console.log(this.state);
     
-    fetch(base + '/api/saveProductPurchase', {
+    fetch(base + '/apiv2/saveProductPurchase', {
       method: "POST",
       headers: {
         'Content-type': 'application/json',
@@ -714,7 +714,7 @@ class Purchase extends Component {
       isUpdateClicked: true
     })
 
-    fetch(base + `/api/getPurchaseInfoForUpdate/?id=${event.currentTarget.dataset['editid']}`, {
+    fetch(base + `/apiv2/getPurchaseInfoForUpdate/?id=${event.currentTarget.dataset['editid']}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
