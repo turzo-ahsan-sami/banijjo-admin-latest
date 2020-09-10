@@ -1,0 +1,15 @@
+#
+# 09-09-2020
+# To do
+#
+
+0. Run project using command -> npm run dev
+
+1. For custom style, edit -> src\containers\DefaultLayout\banijjo.css
+2. For new pages, add route in -> src\routes.js and ( src\_nav.js or src\_navVendor.js )
+3. In case of admin/vendor page permission, manually override in -> src\containers\DefaultLayout\DefaultLayout.js
+
+4. put new api in -> server\routes\index.js
+5. prefix new apis using -> base + /apiv2/
+
+6. Nodejs -> new Buffer() is deprecated, use Buffer.from()

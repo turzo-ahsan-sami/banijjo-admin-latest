@@ -74,6 +74,7 @@ class ProductSpecifications extends Component {
 
       small: false,
       specId: 0,
+      selectedProductCategoryIds: []
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -82,6 +83,17 @@ class ProductSpecifications extends Component {
     this.handleGetEditForm = this.handleGetEditForm.bind(this);
     this.toggleSmall = this.toggleSmall.bind(this);
   }
+
+  handleMultipleSelectChange = (event) => {
+    let opts = [], opt;
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i];
+      if (opt.selected) {
+        opts.push(opt.value);
+      }
+    }
+    this.setState({selectedProductCategoryIds: opts});    
+  };
 
   handleReset() {
     window.location = "/product/products-specifications";
@@ -313,6 +325,7 @@ class ProductSpecifications extends Component {
   handleSubmit(event) {
     console.log(this.state);
     event.preventDefault();
+    // return;
 
     fetch(base + "/apiv2/saveSpecification", {
       method: "POST",
@@ -578,9 +591,13 @@ class ProductSpecifications extends Component {
                       type="select"
                       name="categoryId"
                       id="categoryId"
-                      value={this.state.categoryId}
+                      // value={this.state.categoryId}
+                      value={this.state.selectedProductCategoryIds}
+                      onChange={this.handleMultipleSelectChange}
+                      multiple
+                      style={{ height: "30vh" }}
                     >
-                      <option value="0">Please select</option>
+                      <option value="0">All Categories</option>
                       {this.state.productsCategory.map(
                         (productsCategoryValue, key) => (
                           <option value={key} key={key}>

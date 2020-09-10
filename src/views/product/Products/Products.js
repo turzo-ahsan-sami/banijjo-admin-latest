@@ -210,6 +210,9 @@ class Products extends Component {
       brandRequired: false,
       imageRequired: false,
       employee_id: 0,
+
+      entry_by: 0,
+      entry_user_type: ""
     };
 
     // for modal
@@ -240,164 +243,6 @@ class Products extends Component {
     this.onTagsChanged = this.onTagsChanged.bind(this);
   }
 
-  // react-tag-tab
-  onTagsChanged(tags) {
-    this.setState({ tags });
-  }
-
-  toggleEditLarge() {
-    console.log("Toggle edit large !", this.state.editLarge);
-    console.log("Toggle edit id : ", this.state.getEditId);
-    this.setState({
-      editLarge: !this.state.editLarge,
-      editSpecificationNameArray: [],
-    });
-
-    window.location = "/product/products";
-
-    this.specficationsAll = [];
-
-    console.log("Toggle edit large !", this.state.editLarge);
-  }
-
-  toggleSuccessSize(event) {
-    console.log("Size : ", this.state.addNewSize);
-
-    if (event == "Yes") {
-      fetch(
-        base +
-          `/api/addMoreSize/?sizeType=${this.state.sizeType}&size=${this.state.addNewSize}`,
-        {
-          method: "GET",
-          headers: { Authorization: "Atiq " + cookie.load("token") },
-        }
-      )
-        .then((res) => {
-          console.log(res);
-          return res.json();
-        })
-        .then((infos) => {
-          console.log("Data : ", infos);
-
-          if (infos.success == true) {
-            ToastsStore.success(infos.message);
-
-            this.handleGetSize();
-
-            this.specficationsAll = [];
-
-            console.log(
-              "isColorOrSizeClicked : ",
-              this.state.isColorOrSizeClicked
-            );
-
-            setTimeout(() => {
-              this.changeSpecification();
-              // window.location = '/category/categories';
-            }, 100);
-
-            setTimeout(() => {
-              this.setState({
-                successSize: !this.state.successSize,
-                addNewColor: "",
-              });
-
-              // window.location = '/category/categories';
-            }, 1000);
-          } else {
-            ToastsStore.warning(infos.message);
-
-            this.handleGetColors();
-
-            setTimeout(() => {
-              this.setState({
-                successSize: !this.state.successSize,
-              });
-              // window.location = '/category/categories';
-            }, 1000);
-          }
-
-          return false;
-        });
-    } else {
-      this.setState({
-        successSize: !this.state.successSize,
-      });
-    }
-  }
-
-  toggleImageAlert() {
-    this.setState({
-      imageAlert: !this.state.imageAlert,
-    });
-  }
-
-  toggleColorImageAlert() {
-    this.setState({
-      colorImageAlert: !this.state.colorImageAlert,
-    });
-  }
-
-  toggleSuccessColor(event) {
-    if (event == "Yes") {
-      fetch(base + `/api/addMoreColor/?addNewColor=${this.state.addNewColor}`, {
-        method: "GET",
-        headers: { Authorization: "Atiq " + cookie.load("token") },
-      })
-        .then((res) => {
-          console.log(res);
-          return res.json();
-        })
-        .then((infos) => {
-          console.log("Data : ", infos);
-
-          if (infos.success == true) {
-            ToastsStore.success(infos.message);
-
-            this.handleGetColors();
-
-            this.specficationsAll = [];
-
-            console.log(
-              "isColorOrSizeClicked : ",
-              this.state.isColorOrSizeClicked
-            );
-
-            setTimeout(() => {
-              this.changeSpecification();
-              // window.location = '/category/categories';
-            }, 100);
-
-            setTimeout(() => {
-              this.setState({
-                successColor: !this.state.successColor,
-                addNewColor: "",
-              });
-
-              // window.location = '/category/categories';
-            }, 1000);
-          } else {
-            ToastsStore.warning(infos.message);
-
-            this.handleGetColors();
-
-            setTimeout(() => {
-              this.setState({
-                successColor: !this.state.successColor,
-              });
-              // window.location = '/category/categories';
-            }, 1000);
-          }
-
-          return false;
-        });
-    } else {
-      this.setState({
-        successColor: !this.state.successColor,
-      });
-    }
-  }
-
   componentDidMount() {
     console.log("component mount executed");
 
@@ -409,6 +254,22 @@ class Products extends Component {
 
     if (this.state.userName === null && userPassword === null) {
       this.props.history.push("/login");
+    }
+
+    if (
+      localStorage.user_type == "admin" ||
+      localStorage.user_type == "admin_manager" ||
+      localStorage.user_type == "super_admin"
+    ) {
+      this.setState({
+        entry_by: 0,
+        entry_user_type: localStorage.user_type,
+      });
+    } else {
+      this.setState({
+        entry_by: this.state.vendorId,
+        entry_user_type: "vendor",
+      });
     }
 
     fetch(base + "/api/categories", {
@@ -595,6 +456,166 @@ class Products extends Component {
 
     this.handleGetSize();
   }
+
+  // react-tag-tab
+  onTagsChanged(tags) {
+    this.setState({ tags });
+  }
+
+  toggleEditLarge() {
+    console.log("Toggle edit large !", this.state.editLarge);
+    console.log("Toggle edit id : ", this.state.getEditId);
+    this.setState({
+      editLarge: !this.state.editLarge,
+      editSpecificationNameArray: [],
+    });
+
+    window.location = "/product/products";
+
+    this.specficationsAll = [];
+
+    console.log("Toggle edit large !", this.state.editLarge);
+  }
+
+  toggleSuccessSize(event) {
+    console.log("Size : ", this.state.addNewSize);
+
+    if (event == "Yes") {
+      fetch(
+        base +
+          `/api/addMoreSize/?sizeType=${this.state.sizeType}&size=${this.state.addNewSize}`,
+        {
+          method: "GET",
+          headers: { Authorization: "Atiq " + cookie.load("token") },
+        }
+      )
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((infos) => {
+          console.log("Data : ", infos);
+
+          if (infos.success == true) {
+            ToastsStore.success(infos.message);
+
+            this.handleGetSize();
+
+            this.specficationsAll = [];
+
+            console.log(
+              "isColorOrSizeClicked : ",
+              this.state.isColorOrSizeClicked
+            );
+
+            setTimeout(() => {
+              this.changeSpecification();
+              // window.location = '/category/categories';
+            }, 100);
+
+            setTimeout(() => {
+              this.setState({
+                successSize: !this.state.successSize,
+                addNewColor: "",
+              });
+
+              // window.location = '/category/categories';
+            }, 1000);
+          } else {
+            ToastsStore.warning(infos.message);
+
+            this.handleGetColors();
+
+            setTimeout(() => {
+              this.setState({
+                successSize: !this.state.successSize,
+              });
+              // window.location = '/category/categories';
+            }, 1000);
+          }
+
+          return false;
+        });
+    } else {
+      this.setState({
+        successSize: !this.state.successSize,
+      });
+    }
+  }
+
+  toggleImageAlert() {
+    this.setState({
+      imageAlert: !this.state.imageAlert,
+    });
+  }
+
+  toggleColorImageAlert() {
+    this.setState({
+      colorImageAlert: !this.state.colorImageAlert,
+    });
+  }
+
+  toggleSuccessColor(event) {
+    if (event == "Yes") {
+      fetch(base + `/api/addMoreColor/?addNewColor=${this.state.addNewColor}`, {
+        method: "GET",
+        headers: { Authorization: "Atiq " + cookie.load("token") },
+      })
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((infos) => {
+          console.log("Data : ", infos);
+
+          if (infos.success == true) {
+            ToastsStore.success(infos.message);
+
+            this.handleGetColors();
+
+            this.specficationsAll = [];
+
+            console.log(
+              "isColorOrSizeClicked : ",
+              this.state.isColorOrSizeClicked
+            );
+
+            setTimeout(() => {
+              this.changeSpecification();
+              // window.location = '/category/categories';
+            }, 100);
+
+            setTimeout(() => {
+              this.setState({
+                successColor: !this.state.successColor,
+                addNewColor: "",
+              });
+
+              // window.location = '/category/categories';
+            }, 1000);
+          } else {
+            ToastsStore.warning(infos.message);
+
+            this.handleGetColors();
+
+            setTimeout(() => {
+              this.setState({
+                successColor: !this.state.successColor,
+              });
+              // window.location = '/category/categories';
+            }, 1000);
+          }
+
+          return false;
+        });
+    } else {
+      this.setState({
+        successColor: !this.state.successColor,
+      });
+    }
+  }
+
+
 
   handleGetColors() {
     fetch(base + "/api/getColors", {
@@ -1716,6 +1737,10 @@ class Products extends Component {
       } else {
         data.append("vendor_id", localStorage.getItem("employee_id"));
       }
+
+      data.append("entry_by", this.state.entry_by);
+      data.append("entry_user_type", this.state.entry_user_type);
+
       data.append("productSKUcode", this.state.productSKUcode);
       data.append("categoryIdValue", this.state.categoryIdValue);
       data.append("productBrand", this.state.productBrand);
@@ -1827,7 +1852,7 @@ class Products extends Component {
 
             axios({
               method: "post",
-              url: base + "/api/saveProduct",
+              url: base + "/apiv2/saveProduct",
               data: data,
               headers: {
                 Accept: "application/json",
