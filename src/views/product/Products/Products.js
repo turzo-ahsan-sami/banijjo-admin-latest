@@ -239,6 +239,8 @@ class Products extends Component {
     this.createImages = this.createImages.bind(this);
     this.createUpdatedImages = this.createUpdatedImages.bind(this);
 
+    this.productSpecificationValue = this.productSpecificationValue.bind(this);
+
     // react-tag-tab
     this.onTagsChanged = this.onTagsChanged.bind(this);
   }
@@ -319,7 +321,7 @@ class Products extends Component {
         return false;
       });
 
-    fetch(base + "/api/product_specification_names", {
+    fetch(base + "/apiv2/product_specification_names", {
       method: "GET",
     })
       .then((res) => {
@@ -1644,7 +1646,12 @@ class Products extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    
+    if(this.state.Weight) this.state.productSpecificationBoxFun.push({'Weight':this.state.Weight});
+    if(this.state.Size) this.state.productSpecificationBoxFun.push({'Size':this.state.Size});
 
+    console.log(this.state);
+    
     console.log("Meta Tags : ", this.state.tags);
     console.log("this.state.colorImages : ", this.state.colorImages);
     console.log(
@@ -2036,6 +2043,15 @@ class Products extends Component {
       productSpecificationBoxFun: [...prevState.productSpecificationBoxFun],
     }));
     this.state.productSpecificationBoxFun.push(e.target.value);
+  }
+
+  productSpecificationValue(e) {
+    console.log("productSpecificationValue : ", e.target.value);
+    let value = e.target.value;
+    let name = e.target.name;    
+    this.setState({
+      [name]: value,
+    });    
   }
 
   specificationBoxFun1(e) {
@@ -2720,12 +2736,15 @@ class Products extends Component {
                   )}
                   {++counter}
                   {this.specficationsAll.push(
+                    // <Col md="2">
+                    //   {productsSpecificationNameValue.specification_name ==
+                    //   "Color"
+                    //     ? productsSpecificationNameValue.specification_name
+                    //     : "Size"}{" "}
+                    //   :
+                    // </Col>
                     <Col md="2">
-                      {productsSpecificationNameValue.specification_name ==
-                      "Color"
-                        ? productsSpecificationNameValue.specification_name
-                        : "Size"}{" "}
-                      :
+                      {productsSpecificationNameValue.specification_type}
                     </Col>
                   )}
                   {this.specficationsAll.push(
@@ -2922,58 +2941,57 @@ class Products extends Component {
                     </Col>
                   )}
                   {++counter}
-                  {this.specficationsAll.push(
-                    <Col md="2">
-                      {productsSpecificationNameValue.specification_name ==
-                      "Color"
-                        ? productsSpecificationNameValue.specification_name +
-                          " (50*40 Image)"
-                        : "Size"}{" "}
-                      :
+                  {this.specficationsAll.push(                    
+                    <Col md="3">
+                      {productsSpecificationNameValue.specification_type} ({productsSpecificationNameValue.specification_name})
                     </Col>
                   )}
                   {this.specficationsAll.push(
-                    <Col md="7">
+                    <Col md="6">
                       {productsSpecificationNameValue.type == 0 ? (
                         <div>
                           {this.state.colorList.map((colorListValue, key) => (
                             <table
                               style={{ tableLayout: "fixed", width: "100%" }}
                             >
-                              <tr>
-                                <td>
-                                  <Input
-                                    type="checkbox"
-                                    name="colorsValue"
-                                    value={colorListValue.id}
-                                    onClick={this.specificationBoxFun1.bind(
-                                      this
-                                    )}
-                                  />
-                                  {colorListValue.name}
-                                </td>
-                                <td>
-                                  {/* {
-                                  this.state.getColorIdForImage == colorListValue.id && this.state.isImageEnable == true ?
-                                    <input style={{visibility:"none"}} dataId={key} type="file" onChange= {(e)=>this.onChangeImageHandler(e,colorListValue.id, 'colorsImage')}  name="image" />
-                                  :
-                                  null
-                                } */}
-                                  <input
-                                    style={{ visibility: "none" }}
-                                    dataId={key}
-                                    type="file"
-                                    onChange={(e) =>
-                                      this.onChangeImageHandler(
-                                        e,
-                                        colorListValue.id,
-                                        "colorsImage"
-                                      )
-                                    }
-                                    name="image"
-                                  />
-                                </td>
-                              </tr>
+                              <tbody>
+
+                                <tr>
+                                  <td>
+                                    <Input
+                                      type="checkbox"
+                                      name="colorsValue"
+                                      value={colorListValue.id}
+                                      onClick={this.specificationBoxFun1.bind(
+                                        this
+                                      )}
+                                    />
+                                    {colorListValue.name}
+                                  </td>
+                                  <td>
+                                    {/* {
+                                    this.state.getColorIdForImage == colorListValue.id && this.state.isImageEnable == true ?
+                                      <input style={{visibility:"none"}} dataId={key} type="file" onChange= {(e)=>this.onChangeImageHandler(e,colorListValue.id, 'colorsImage')}  name="image" />
+                                    :
+                                    null
+                                  } */}
+                                    <input
+                                      style={{ visibility: "none" }}
+                                      dataId={key}
+                                      type="file"
+                                      onChange={(e) =>
+                                        this.onChangeImageHandler(
+                                          e,
+                                          colorListValue.id,
+                                          "colorsImage"
+                                        )
+                                      }
+                                      name="image"
+                                    />
+                                  </td>
+                                </tr>
+                              
+                              </tbody>
                             </table>
                           ))}
                           {
@@ -2988,26 +3006,54 @@ class Products extends Component {
                           }
                         </div>
                       ) : (
+                        <>
+                            <Input
+                              type="text"
+                              name={productsSpecificationNameValue.specification_type}
+                              className="form-control form-control-sm"
+                              onChange={this.productSpecificationValue.bind(this)}
+                            />
+                          {/* {productsSpecificationNameValue.specification_type == 'Weight' ? (
+                            <Input
+                              type="text"
+                              name={productsSpecificationNameValue.specification_type}
+                              className="form-control form-control-sm"
+                              onChange={this.productSpecificationValue.bind(this)}
+                            />
+                          ) : (
+                            <Input
+                              type="text"
+                              name={productsSpecificationNameValue.specification_name}
+                              className="form-control form-control-sm"
+                              onChange={this.productSpecificationValue.bind(this)}
+                            />
+                          )} */}
+                        </>
+                        /*                         
                         <div>
                           {this.state.sizeList.map((sizeListValue, key) =>
                             productsSpecificationNameValue.type ==
                             sizeListValue.size_type_id ? (
-                              <table
+                              <table key={key}
                                 style={{ tableLayout: "fixed", width: "100%" }}
                               >
-                                <tr>
-                                  <td>
-                                    <Input
-                                      type="checkbox"
-                                      name="colorsValue"
-                                      value={sizeListValue.id}
-                                      onClick={this.specificationBoxFun.bind(
-                                        this
-                                      )}
-                                    />
-                                    {sizeListValue.size}
-                                  </td>
-                                </tr>
+                                <tbody>
+
+                                  <tr>
+                                    <td>
+                                      <Input
+                                        type="checkbox"
+                                        name="colorsValue"
+                                        value={sizeListValue.id}
+                                        onClick={this.specificationBoxFun.bind(
+                                          this
+                                        )}
+                                      />
+                                      {sizeListValue.size}
+                                    </td>
+                                  </tr>
+                                
+                                </tbody>
                               </table>
                             ) : null
                           )}
@@ -3023,6 +3069,7 @@ class Products extends Component {
                             </Button>
                           }
                         </div>
+                        */
                       )}
                     </Col>
                   )}
@@ -4043,11 +4090,7 @@ class Products extends Component {
                                 </option>
                               )
                             )}
-                            {/* {
-    this.state.productsCategory.map((productsCategoryValue, key) =>
-    <option value={productsCategoryValue.id}> {productsCategoryValue.category_name} </option>
-    )
-    } */}
+                            
                           </Input>
                           {this.state.categoryRequired == true ? (
                             <p style={{ color: "red" }}>*required</p>
@@ -4120,13 +4163,11 @@ class Products extends Component {
                                 onChange={this.handlevendorList.bind(this)}
                                 value={this.state.vendorId}
                               >
-                                <option value="0">Please select</option>
+                                <option value="">Please select</option>
+                                <option value="0">Admin</option>
                                 {this.state.vendorList.map(
                                   (vendorListValue, key) => (
-                                    <option value={vendorListValue.id}>
-                                      {" "}
-                                      {vendorListValue.name}{" "}
-                                    </option>
+                                    <option value={vendorListValue.id} key={key}>{vendorListValue.name}</option>
                                   )
                                 )}
                               </Input>

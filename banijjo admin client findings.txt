@@ -13,23 +13,22 @@
 
 
 
-17)     need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases) 
-        [done] purchase -> solution: database table `inv_purchase`, column `storedBy` -> 0 if admin purchases, vendorId if vendor purchases
-        [done] purchase return -> solution: database table `inv_purchase_return`, column `returnedBy` -> 0 if admin returns, vendorId if vendor returns
+17) need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases) 
+    [done] purchase -> solution: database table `inv_purchase`, column `storedBy` -> 0 if admin purchases, vendorId if vendor purchases
+    [done] purchase return -> solution: database table `inv_purchase_return`, column `returnedBy` -> 0 if admin returns, vendorId if vendor returns
 
-        [done] stock -> solution: database table `stock` 
-                ##  confirm purchase api: confirmPurchase 
-                    // solution: db table `stock`, columns `entry_by (int)` `entry_user_type (varchar 255)`
-                ##  confirm purchase return api: confirmPurchaseReturn 
-                    // solution: db table `stock`, columns `entry_by (int)` `entry_user_type (varchar 255)`
+    [done] stock -> solution: database table `stock` 
+            ##  confirm purchase api: confirmPurchase 
+                // solution: db table `stock`, columns `entry_by (int)` `entry_user_type (varchar 255)`
+            ##  confirm purchase return api: confirmPurchaseReturn 
+                // solution: db table `stock`, columns `entry_by (int)` `entry_user_type (varchar 255)`
 
 
 [done] 21)  vendor can purchase own or other 3rd party supplier.            
 
 [done] 23) Stock Info (With new purchase from vendor). (optional vat registration field in purchase) 
 
-
-22) Product info and Purchase info.
+[done] 22) Product info and Purchase info.
 
 
 

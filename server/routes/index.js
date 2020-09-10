@@ -859,15 +859,18 @@ routes.post("/saveProduct", verifyToken, async function (req, res) {
 
         if (specificationBoxFun1.length > 0 && colorImageObjects.length > 0) {
           specifiationOBJ.color = colorImageObjects;
-          specifiationOBJ.size = specificationBoxFun;
+          // specifiationOBJ.size = specificationBoxFun;
+          specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };           
         }
         else if (specificationBoxFun1.length > 0 && colorImageObjects.length == 0) {
           specifiationOBJ.color = specificationBoxFun1;
-          specifiationOBJ.size = specificationBoxFun;
+          // specifiationOBJ.size = specificationBoxFun;
+          specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };          
         }
         else if (specificationBoxFun1.length == 0 && colorImageObjects.length > 0) {
           specifiationOBJ.color = colorImageObjects;
-          specifiationOBJ.size = specificationBoxFun;
+          // specifiationOBJ.size = specificationBoxFun;
+          specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };          
         }
        
         
@@ -1006,6 +1009,15 @@ routes.get('/confirmPurchaseReturn', verifyToken, async function (req, res) {
     }
   });
 
+});
+
+
+routes.get('/product_specification_names', (req, res) => {
+  dbConnection.query('SELECT product_specification_names.id AS id, product_specification_names.specification_name AS specification_name, product_specification_names.category_id AS category_id, product_specification_names.type AS type, product_specification_names.specification_type AS specification_type, category.category_name AS category_name FROM product_specification_names JOIN category ON product_specification_names.category_id = category.id WHERE product_specification_names.status = 1 AND product_specification_names.softDel = 0 ORDER BY product_specification_names.id DESC', function (error, results, fields) {
+    console.log(results);
+    if (error) throw error;
+    return res.send({ error: error, data: results, message: 'sepecification name list.' });
+  });
 });
 
 module.exports = routes;

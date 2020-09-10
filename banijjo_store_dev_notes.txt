@@ -13,3 +13,7 @@
 5. prefix new apis using -> base + /apiv2/
 
 6. Nodejs -> new Buffer() is deprecated, use Buffer.from()
+
+7. Stock table : quantity < 0 ?: 'purchase return' : 'purchase'
+
+8. Flow : add product -> purchase product -> confirm purchase -> stock 
