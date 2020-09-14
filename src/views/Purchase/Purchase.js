@@ -112,6 +112,17 @@ class Purchase extends Component {
     this.toggleLargeEdit = this.toggleLargeEdit.bind(this);
     this.toggleSmall = this.toggleSmall.bind(this);
     this.toggleConfirmModal = this.toggleConfirmModal.bind(this);
+
+    this.onChangeSpecs = this.onChangeSpecs.bind(this);
+  }
+
+  onChangeSpecs(e) {
+    console.log("onChangeSpecs : ", e.target.value);
+    // let value = e.target.value;
+    // let name = e.target.name;    
+    // this.setState({
+    //   [name]: value,
+    // });    
   }
 
   componentDidMount() {
@@ -259,7 +270,7 @@ class Purchase extends Component {
         return false;
       });
 
-    fetch(base + "/api/getSizeInfos", {
+    fetch(base + "/apiv2/getSizeInfos", {
       method: "GET",
     })
       .then((res) => {
@@ -341,7 +352,7 @@ class Purchase extends Component {
     if (event.target.value != "") {
       fetch(
         base +
-          `/api/search_products_for_purchase/?id=${
+          `/apiv2/search_products_for_purchase/?id=${
             event.target.value
           }&vendorId=${this.state.supplierId}&user_type=${localStorage.getItem(
             "user_type"
@@ -395,6 +406,7 @@ class Purchase extends Component {
   }
 
   handleSearchText(event) {
+    console.log("handleSearchText method fired ... ");
     console.log(event.target.dataset.value);
     console.log(event.target.dataset.id);
 
@@ -415,7 +427,7 @@ class Purchase extends Component {
     });
 
     fetch(
-      base + `/api/getSpecificationNamesValues/?id=${event.target.dataset.id}`,
+      base + `/apiv2/getSpecificationNamesValues/?id=${event.target.dataset.id}`,
       {
         method: "GET",
         headers: { Authorization: "Atiq " + cookie.load("token") },
@@ -425,11 +437,7 @@ class Purchase extends Component {
         console.log(res);
         return res.json();
       })
-      .then((specification) => {
-        console.log(
-          "THe api response for products quesry : ",
-          specification.data
-        );
+      .then((specification) => {      
 
         if (specification.success == true) {
           this.setState({
@@ -450,15 +458,9 @@ class Purchase extends Component {
           }
 
           console.log("specification.colorList : ", specification.colorList);
-          console.log(
-            "specification.colorList length : ",
-            specification.colorList.length
-          );
+          console.log("specification.colorList length : ", specification.colorList.length);
           console.log("specification.sizeList : ", specification.sizeList);
-          console.log(
-            "specification.sizeList length : ",
-            specification.sizeList.length
-          );
+          console.log("specification.sizeList length : ", specification.sizeList.length);
         } else {
           console.log("Error handled");
           console.log("Specificaton data : ", specification);
@@ -466,7 +468,6 @@ class Purchase extends Component {
       });
 
     this.state.productListArray = [];
-
     console.log(this.state.productName);
   }
 
@@ -884,7 +885,7 @@ class Purchase extends Component {
           <Col xs="12" md="12">
             <Card>
               <CardHeader>
-                {/* <i className="fa fa-align-justify"></i> Product Specification List */}
+                
                 <Row>
                   <Col md="6">
                     <i className="fa fa-align-justify"></i> Add Product Purchase
@@ -923,11 +924,22 @@ class Purchase extends Component {
                       <tr key={Key}>
                         <td>{PurchasseValue.billNo}</td>
                         <td>{PurchasseValue.chalanNo}</td>
-                        {this.state.vendorListAll.map((vendorListValue, key) =>
+
+                        {PurchasseValue.supplierId == 0 ? (<td>Admin</td>) : (
+                          <td>
+                            {this.state.vendorListAll.map((vendorListValue, key) => vendorListValue.id == PurchasseValue.supplierId ? 
+                              ( <span>{vendorListValue.name}</span> ) 
+                              : ( <span></span> )
+                            )}
+                          </td>
+                        )}
+
+                        {/* {this.state.vendorListAll.map((vendorListValue, key) =>
                           vendorListValue.id == PurchasseValue.supplierId ? (
                             <td key={key}>{vendorListValue.name}</td>
                           ) : null
-                        )}
+                        )} */}
+
                         <td>{PurchasseValue.purchaseDate}</td>
                         <td>{PurchasseValue.totalQuantity}</td>
                         <td>{PurchasseValue.totalAmount}</td>
@@ -1111,6 +1123,7 @@ class Purchase extends Component {
                             onChange={this.handleChange.bind(this)}
                           >
                             <option value="">select</option>
+                            <option value="0">Admin</option>
                             {this.state.vendorListAll.map(
                               (vendorListValue, key) => (
                                 <option value={vendorListValue.id} key={key}>
@@ -1272,6 +1285,7 @@ class Purchase extends Component {
                               border: "1px solid #cccccc",
                             }}
                             disabled={this.state.disabledSize ? "disabled" : ""}
+                            onChange={this.onChangeSpecs.bind(this)}
                           >
                             <option value="DEFAULT" disabled>
                               Size
@@ -1280,7 +1294,7 @@ class Purchase extends Component {
                               ? this.state.sizeList.map(
                                   (sizeListValue, key) => (
                                     <option value={sizeListValue.id} key={key}>
-                                      {sizeListValue.size}
+                                      {sizeListValue.Size}
                                     </option>
                                   )
                                 )

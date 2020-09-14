@@ -774,11 +774,12 @@ routes.get('/getPurchaseReturnInfoForUpdate', verifyToken, async function(req, r
 
 // ADD PRODUCT
 
+
 routes.post("/saveProduct", verifyToken, async function (req, res) {
   jwt.verify(req.token, "secretkey", async function (err, authData) {
     if (err) {
       res.status(403).send({ success: false, message: "jwt expired", status: "403" });
-    } else {      
+    } else {              
       try {
         if (req.files != null) {
 
@@ -860,18 +861,29 @@ routes.post("/saveProduct", verifyToken, async function (req, res) {
         if (specificationBoxFun1.length > 0 && colorImageObjects.length > 0) {
           specifiationOBJ.color = colorImageObjects;
           // specifiationOBJ.size = specificationBoxFun;
-          specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };           
+          // specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };           
         }
         else if (specificationBoxFun1.length > 0 && colorImageObjects.length == 0) {
           specifiationOBJ.color = specificationBoxFun1;
           // specifiationOBJ.size = specificationBoxFun;
-          specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };          
+          // specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };          
         }
         else if (specificationBoxFun1.length == 0 && colorImageObjects.length > 0) {
           specifiationOBJ.color = colorImageObjects;
           // specifiationOBJ.size = specificationBoxFun;
-          specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };          
+          // specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };          
         }
+
+        const productSpecificationWeight = JSON.parse(req.body.productSpecificationWeight);
+        const productSpecificationSize = JSON.parse(req.body.productSpecificationSize);
+        const productSpecObj = productSpecificationWeight.concat(productSpecificationSize);
+        console.log('productSpecObj : ', productSpecObj);  
+        // return;
+
+        // specifiationOBJ = { ...specifiationOBJ, ...specificationBoxFun };
+        specifiationOBJ = { ...specifiationOBJ, ...productSpecObj };
+        console.log('specifiationOBJ ... : ', specifiationOBJ);  
+        // return;
        
         
         if(Object.values(fullStateData).length > 0) {
@@ -897,7 +909,9 @@ routes.post("/saveProduct", verifyToken, async function (req, res) {
 
         const lastInsertId = await query(`SELECT id FROM products ORDER BY id DESC LIMIT 1`);         
         const productIdForSlug = lastInsertId[0].id + 1;
-        
+
+        let brandName = (req.body.productBrand) ? req.body.productBrand[0] : "";
+
         const insert_product = await query(
           `INSERT INTO products (
             product_name, category_id, product_sku, productPrice, brand_name, 
@@ -909,7 +923,7 @@ routes.post("/saveProduct", verifyToken, async function (req, res) {
             metaTags            
           ) 
           VALUES (
-            '${req.body.productName}' , '${req.body.categoryIdValue}' , '${req.body.productSKUcode}' , '${req.body.productPrice}' , '${req.body.productBrand}' ,
+            '${req.body.productName}' , '${req.body.categoryIdValue}' , '${req.body.productSKUcode}' , '${req.body.productPrice}' , '${brandName}' ,
             '${req.body.productImagesJson}' , '${req.body.homeImage}' , '${req.body.productDescriptionFull}' ,
             '${req.body.vendor_id}' , '${req.body.entry_by}' , '${req.body.entry_user_type}' ,
             '1' , '1' , '2',
@@ -1018,6 +1032,177 @@ routes.get('/product_specification_names', (req, res) => {
     if (error) throw error;
     return res.send({ error: error, data: results, message: 'sepecification name list.' });
   });
+});
+
+
+// SALES RETURN
+
+routes.post('/saveSalesReturn', verifyToken, (req, res) => {
+  console.log('Sales Return Request : ', req.body);
+  
+  jwt.verify(req.token, 'secretkey', (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    }
+    else {
+      var purchase_table_id = 0;
+      var purchaseListArray = [];
+
+      promise = new Promise (function (resolve, reject) {
+
+        try {
+          var insert_sql_query = "INSERT INTO sales_return (salesReturnBillNo, salesBillId, customerId, salesDate, salesReturnDate, totalSalesReturnQuantity, totalSalesReturnAmount, totalSalesPayAmount, salesReturnPayAmount, reason, status) VALUES ('"+req.body.purchaseReturnNo+"', '"+req.body.sales_bill_id+"', '"+req.body.customer_id+"', '"+req.body.sales_date+"', '"+req.body.purchaseReturnDate+"',        '"+req.body.grandTotalQuantity+"', '"+req.body.grandTotalPrice+"', '"+req.body.sales_pay_amount+"', '"+req.body.totalReturnAmount+"', '"+req.body.reason+"', '1')";
+
+          dbConnection.query(insert_sql_query, function (err, result) {
+            console.log('user insert result : ', result.insertId);
+            console.log('user error result : ', err);
+            if (result) {
+              console.log("1 record inserted to user");
+              // return res.send({success: true, server_message: result});
+              resolve(result.insertId);
+            }
+            else {
+              console.log('Error to inseret at user : ', err);
+              return res.send({success: false, error: err});
+            }
+          });
+        }
+        catch (error) {
+          if (error) return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body});
+        }
+
+      }).then( function (resolve) {
+
+        purchaseElements = req.body.PurchaseList;
+
+        async.forEachOf(purchaseElements, function (purchaseElement, i, inner_callback){
+
+          var insert_sql_query = "INSERT INTO sales_return_details (salesReturnId, salesReturnDate, productId, salesReturnQuantity, totalAmount, status) VALUES ('"+resolve+"', '"+req.body.purchaseReturnDate+"', '"+purchaseElement.id+"', '"+purchaseElement.productQuantity+"', '"+purchaseElement.totalPrice+"', '1')";
+
+          dbConnection.query(insert_sql_query, function(err, results, fields){
+            if(!err){
+              console.log("Query Results : ", results);
+              inner_callback(null);
+            } else {
+              console.log("Error while performing Query");
+              inner_callback(err);
+            };
+          });
+        }, function(err){
+          if(err){
+            console.log('ASYNC loop error !');
+            return res.send({success: false, error: err});
+          }else{
+            console.log('Successfully inserted into inv_purchase_details table');
+            return res.send({success: true, message: 'Successfully inserted into inv_purchase_details table'});
+          }
+        });
+
+      }).catch(function (reject) {
+        console.log('Promise rejected', reject);
+        return res.send({success: false, error: err});
+      });
+
+      // return res.send({success: false, message: 'Successfully inserted into inv_purchase_details table'});
+    }
+  });
+
+});
+
+
+
+// SEARCH PRODUCTS FOR PURCHASE
+
+routes.get("/search_products_for_purchase", verifyToken, (req, res) => {
+  console.log("Vendor Values : ", req.query.vendorId);
+  console.log("Vendor Values : ", req.query.id);
+
+  jwt.verify(req.token, "secretkey", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      dbConnection.query(
+        'SELECT * FROM products WHERE entry_user_type = "' +
+          req.query.user_type +
+          '" AND vendor_id = "' +
+          req.query.vendorId +
+          '" AND ( LOWER(product_name) LIKE "%' +
+          req.query.id +
+          '%" OR  LOWER(product_sku) LIKE "%' +
+          req.query.id +
+          '%") ',
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.send({ data: results, message: "data" });
+        }
+      );
+    }
+  });
+});
+
+
+// PRODUCT WISE SPECIFICATION 
+
+routes.get('/getSpecificationNamesValues', verifyToken, async function (req, res) {
+  console.log('Vendor Values : ', req.query.vendorId);
+  console.log('Vendor Values : ', req.query.id);
+
+  jwt.verify(req.token, 'secretkey', async function (err, authData) {
+    if (err) {
+      res.sendStatus(403);
+    }
+    else {
+      try {
+        const get_specification_list = await query ('SELECT product_specification_name FROM products WHERE id = '+req.query.id);
+
+        let parse_specification_values = JSON.parse(get_specification_list[0].product_specification_name);
+        // console.log("parse_specification_values : ", parse_specification_values);
+
+        let colorList = [];
+        if (parse_specification_values.hasOwnProperty("color")) {
+          let colorListParse = parse_specification_values["color"];
+          for (let i = 0; i < colorListParse.length; i++) {
+            const color_name = await query(
+              "SELECT name FROM color_infos WHERE id = " +
+                colorListParse[i].colorId
+            );
+            let colorOBJ = {};
+            colorOBJ.id = colorListParse[i].colorId;
+            colorOBJ.name = color_name[0].name;
+            colorList.push(colorOBJ);
+          }
+        }
+        console.log('colorList : ', colorList);
+
+        let sizeList = [];
+        if (parse_specification_values[0]) {
+          sizeList = parse_specification_values[0].hasOwnProperty("Number")
+            ? parse_specification_values[0].Number
+            : parse_specification_values[0].Roman_Number;
+        }      
+        console.log('sizeList : ', sizeList);
+        
+        return res.send({ success : true, data : get_specification_list, colorList : colorList, sizeList : sizeList });
+      } catch (e) {
+        console.log('Error : ', e);
+        return res.send({ success : false, error: e, data : [], colorList : [], sizeList : [] });
+      }
+    }
+  });
+});
+
+
+routes.get("/getSizeInfos", async function (req, res) {
+  try {
+    const get_size_infos = await query(
+      "SELECT size_infos.id AS id, size_infos.size AS size, size_infos.size_type_id AS size_type_id, size_type.name FROM size_infos JOIN size_type ON size_infos.size_type_id = size_type.id WHERE size_infos.softDel = 0 AND size_infos.status = 1 AND size_type.softDel = 0 AND size_type.status = 1"
+    );
+
+    return res.send({ success: true, data: get_size_infos });
+  } catch (e) {
+    console.log("Error : ", e);
+    return res.send({ success: true, data: [] });
+  }
 });
 
 module.exports = routes;

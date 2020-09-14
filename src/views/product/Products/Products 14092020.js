@@ -2083,18 +2083,9 @@ class Products extends Component {
 
   productSpecificationSizeValueSetter(e) {
     console.log("productSpecificationSizeValueSetter : ", e.target.value);    
-    let sizeObj = {};
-
-    let foundSize = this.state.sizeList.find(s => s.size === e.target.value);
-    sizeObj.id = foundSize.id;
-
-    let name = e.target.name;
+    var sizeObj = {};
+    var name = e.target.name;
     sizeObj.Size = e.target.value;
-    // sizeObj.Size = e.target.name;
-    // sizeObj.Id = e.target.value;
-
-    console.log("productSpecificationSizeValueSetter : sizeObj : ", sizeObj);
-
     this.state.productSpecificationSizeNumberOrRomanNumber.push(sizeObj);
   }
 
@@ -3003,7 +2994,9 @@ class Products extends Component {
                                       type="checkbox"
                                       name="colorsValue"
                                       value={colorListValue.id}
-                                      onClick={this.specificationBoxFun1.bind(this)}
+                                      onClick={this.specificationBoxFun1.bind(
+                                        this
+                                      )}
                                     />
                                     {colorListValue.name}
                                   </td>
@@ -3045,84 +3038,103 @@ class Products extends Component {
                           }
                         </div>
                       ) : (
-                          <>
-                            {productsSpecificationNameValue.specification_type == 'Weight' ? (
-                              <Input
-                                type="text"
-                                name={productsSpecificationNameValue.specification_type}
-                                className="form-control form-control-sm"
-                                onChange={this.productSpecificationValue.bind(this)}
-                              />
-                            ) : (
-                                <>
-                                  {productsSpecificationNameValue.specification_name == 'Number' ? (
-                                    <div>
-                                      {
-                                        this.state.sizeList.map((sizeListValue, key) => sizeListValue.size_type_id == 1 ? (
-                                          <table style={{ tableLayout: "fixed", width: "100%" }}>
-                                            <tbody>
-                                              <tr>
-                                                <td>
-                                                  <Input
-                                                    type="checkbox"
-                                                    name={productsSpecificationNameValue.specification_name}
-                                                    value={sizeListValue.size}
-                                                    // name={productsSpecificationNameValue.size}
-                                                    // value={sizeListValue.id}
-                                                    onClick={this.productSpecificationSizeValueSetter.bind(this)}
-                                                  />
-                                                  {sizeListValue.size}
-                                                </td>
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        ) : (
-                                            null
-                                          )
-                                        )
-                                      }
-                                    </div>
-                                  ) : (
-                                      <>
-                                        {productsSpecificationNameValue.specification_name == 'Roman_Number' ? (
-                                          <div>
-                                            {this.state.sizeList.map((sizeListValue, key) => sizeListValue.size_type_id == 3 ? (
-                                              <table style={{ tableLayout: "fixed", width: "100%" }}>
-                                                <tbody>
-                                                  <tr>
-                                                    <td>
-                                                      <Input
-                                                        type="checkbox"
-                                                        name={productsSpecificationNameValue.specification_name}
-                                                        value={sizeListValue.size}
-                                                        // name={productsSpecificationNameValue.size}
-                                                        // value={sizeListValue.id}
-                                                        onClick={this.productSpecificationSizeValueSetter.bind(this)}
-                                                      />
-                                                      {sizeListValue.size}
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            ) : (
-                                                null
-                                              )
-                                            )}
-                                          </div>
-                                        ) : (
-                                            <Input 
-                                              type="text" 
-                                              name={productsSpecificationNameValue.specification_name} 
-                                              className="form-control form-control-sm" 
-                                              onChange={this.productSpecificationValue.bind(this)} 
-                                            />
-                                          )}
-                                      </>
-                                    )}
-                                </>
+                        <>                            
+                          {productsSpecificationNameValue.specification_type == 'Weight' ? (
+                            <Input
+                              type="text"
+                              name={productsSpecificationNameValue.specification_type}
+                              className="form-control form-control-sm"
+                              onChange={this.productSpecificationValue.bind(this)}
+                            />
+                          ) : (
+                            <>
+                              {productsSpecificationNameValue.specification_name == 'Number' || productsSpecificationNameValue.specification_name == 'Roman_Number' ? (
+                                <div>
+                                {
+                                    this.state.sizeList.map((sizeListValue, key) => sizeListValue.size_type_id == 1 ? (
+                                      <table style={{ tableLayout: "fixed", width: "100%" }}>
+                                        <tbody>      
+                                          <tr>
+                                            <td>
+                                              <Input
+                                                type="checkbox"
+                                                name={productsSpecificationNameValue.specification_name}
+                                                value={sizeListValue.size}
+                                                onClick={this.productSpecificationSizeValueSetter.bind(this)}
+                                              />
+                                              {sizeListValue.size}
+                                            </td>                                        
+                                          </tr>                                    
+                                        </tbody>
+                                      </table>
+                                    )  : (
+                                      null
+                                    )
+                                  )
+                                }
+                                {
+                                  <Button
+                                    color="success"
+                                    className="btn-pill btn btn-success btn-sm"
+                                    onClick={this.addMoreSize.bind(this)}
+                                  >
+                                    {" "}
+                                    <i className="fa fa-plus-circle"></i> New Size
+                                  </Button>
+                                }
+                              </div>
+                              ) : (
+                                <Input
+                                  type="text"
+                                  name={productsSpecificationNameValue.specification_name}
+                                  className="form-control form-control-sm"
+                                  onChange={this.productSpecificationValue.bind(this)}
+                                />
                               )}
-                          </>
-                        
+                            </>
+                          )}
+                        </>
+                        /*                         
+                        <div>
+                          {this.state.sizeList.map((sizeListValue, key) =>
+                            productsSpecificationNameValue.type ==
+                            sizeListValue.size_type_id ? (
+                              <table key={key}
+                                style={{ tableLayout: "fixed", width: "100%" }}
+                              >
+                                <tbody>
+
+                                  <tr>
+                                    <td>
+                                      <Input
+                                        type="checkbox"
+                                        name="colorsValue"
+                                        value={sizeListValue.id}
+                                        onClick={this.specificationBoxFun.bind(
+                                          this
+                                        )}
+                                      />
+                                      {sizeListValue.size}
+                                    </td>
+                                  </tr>
+                                
+                                </tbody>
+                              </table>
+                            ) : null
+                          )}
+                          {
+                            <Button
+                              color="success"
+                              className="btn-pill btn btn-success btn-sm"
+                              data-id={productsSpecificationNameValue.type}
+                              onClick={this.addMoreSize.bind(this)}
+                            >
+                              {" "}
+                              <i className="fa fa-plus-circle"></i> New Size
+                            </Button>
+                          }
+                        </div>
+                        */
                       )}
                     </Col>
                   )}

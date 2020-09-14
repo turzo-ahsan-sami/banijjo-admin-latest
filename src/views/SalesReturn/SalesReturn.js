@@ -530,7 +530,7 @@ class SalesReturn extends Component {
     console.log(this.state);
     event.preventDefault();
 
-    fetch(base+'/api/saveSalesReturn' , {
+    fetch(base+'/apiv2/saveSalesReturn' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json',
@@ -816,6 +816,15 @@ class SalesReturn extends Component {
                 </Col>
                 <Col xs="12" md="9">
                   <Input type="text" id="totalReturnAmount" name="totalReturnAmount" placeholder="Total Return Amount" ref='clear' required onChange={this.handleAddChange.bind(this)} value={this.state.totalReturnAmount}/>
+                </Col>
+              </FormGroup>
+
+              <FormGroup row>
+                <Col md="3">
+                  <Label htmlFor="values">Reason</Label>
+                </Col>
+                <Col xs="12" md="9">
+                  <Input type="text" id="reason" name="reason" placeholder="Reason" ref='clear' onChange={this.handleAddChange.bind(this)} />
                 </Col>
               </FormGroup>
 
