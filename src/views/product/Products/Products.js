@@ -4188,20 +4188,46 @@ class Products extends Component {
                         <div>
                           <FormGroup row>
                             <Col md="3">
-                              <Label htmlFor="vendorList">Vendor </Label>
+                              <Label htmlFor="vendorList">Vendor List *</Label>
                             </Col>
                             <Col xs="12" md="9">
                               <Input
-                                type="text"
-                                id="vendorId"
+                                type="select"
                                 name="vendorId"
-                                placeholder=""
-                                readOnly={true}
-                                value={this.state.userName}
-                              />
+                                id="vendorId"
+                                onChange={this.handlevendorList.bind(this)}
+                                value={this.state.vendorId}
+                              >
+                                <option value="">Please select</option>                                
+                                {this.state.vendorList.map(
+                                  (vendorListValue, key) => (
+                                    <option value={vendorListValue.id} key={key}>{vendorListValue.name}</option>
+                                  )
+                                )}
+                              </Input>
+                              {this.state.vendorRequired == true ? (
+                                <p style={{ color: "red" }}>*required</p>
+                              ) : null}
                             </Col>
                           </FormGroup>
                         </div>
+                        // <div>
+                        //   <FormGroup row>
+                        //     <Col md="3">
+                        //       <Label htmlFor="vendorList">Vendor </Label>
+                        //     </Col>
+                        //     <Col xs="12" md="9">
+                        //       <Input
+                        //         type="text"
+                        //         id="vendorId"
+                        //         name="vendorId"
+                        //         placeholder=""
+                        //         readOnly={true}
+                        //         value={this.state.userName}
+                        //       />
+                        //     </Col>
+                        //   </FormGroup>
+                        // </div>
                       ) : (
                         <div>
                           <FormGroup row>

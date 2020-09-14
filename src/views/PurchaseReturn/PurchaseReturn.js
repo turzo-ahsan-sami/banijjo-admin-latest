@@ -418,7 +418,7 @@ class PurchaseReturn extends Component {
       ['id']: event.target.dataset.id
     });
 
-    fetch(base+`/api/getSpecificationNamesValues/?id=${event.target.dataset.id}`, {
+    fetch(base+`/apiv2/getSpecificationNamesValues/?id=${event.target.dataset.id}`, {
       method: 'GET',
       headers: {'Authorization': 'Atiq '+cookie.load('token')}
     })
@@ -1156,8 +1156,7 @@ class PurchaseReturn extends Component {
                           <Label htmlFor="SuplierName">Supplier Name</Label>
                         </Col>
 
-                        <Col xs="12" md="9">
-                          {/* <Input type="selec" id="SuplierName" name="SuplierName" placeholder="Suplier Name" readOnly value={this.state.userName}/> */}
+                        <Col xs="12" md="9">                          
                           <Input
                             type="select"
                             id="SuplierName"
@@ -1364,7 +1363,7 @@ class PurchaseReturn extends Component {
                           {this.state.sizeList.length > 0
                             ? this.state.sizeList.map((sizeListValue, key) => (
                               <option value={sizeListValue.id}>
-                                {sizeListValue.size}
+                                {sizeListValue.Size}
                               </option>
                             ))
                             : null}
@@ -1747,7 +1746,7 @@ class PurchaseReturn extends Component {
                     {this.state.sizeList.length > 0
                       ? this.state.sizeList.map((sizeListValue, key) => (
                           <option value={sizeListValue.id}>
-                            {sizeListValue.size}
+                            {sizeListValue.Size}
                           </option>
                         ))
                       : null}

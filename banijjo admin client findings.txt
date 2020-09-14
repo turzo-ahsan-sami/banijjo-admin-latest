@@ -4,25 +4,25 @@
 #
 
 
-18) [done]  need required the color info at the time of product entry if user choose a color. (see notes)
-            // color, size, weight input (done)
-            // multi-category select in product specification (press ctrl + click to select multiple categories) (done)
+[done]  ##  `sales` and `sales_details` > vendor_id (admin/others) wise calculation needs to be done from the front end 
+            // solution: table `sales_details` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
 
-## [done]   add product (fix server bug - nodemon app crash when executing query)
+[done]  ##   add product (fix server bug - nodemon app crash when executing query)
             // solution: db table `products`, column `entry_user_type`
 
+[done]  17)  need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases) 
+            purchase -> solution: database table `inv_purchase`, column `storedBy` -> 0 if admin purchases, vendorId if vendor purchases
+            purchase return -> solution: database table `inv_purchase_return`, column `returnedBy` -> 0 if admin returns, vendorId if vendor returns
 
-
-17) need to insert and check who inserted the product, purchase, purchase return, stock. (Check and store if admin purchases) 
-    [done] purchase -> solution: database table `inv_purchase`, column `storedBy` -> 0 if admin purchases, vendorId if vendor purchases
-    [done] purchase return -> solution: database table `inv_purchase_return`, column `returnedBy` -> 0 if admin returns, vendorId if vendor returns
-
-    [done] stock -> solution: database table `stock` 
+            stock -> solution: database table `stock` 
             ##  confirm purchase api: confirmPurchase 
                 // solution: db table `stock`, columns `entry_by (int)` `entry_user_type (varchar 255)`
             ##  confirm purchase return api: confirmPurchaseReturn 
                 // solution: db table `stock`, columns `entry_by (int)` `entry_user_type (varchar 255)`
 
+[done]  18)  need required the color info at the time of product entry if user choose a color. (see notes)
+            // color, size, weight input (done)
+            // multi-category select in product specification (press ctrl + click to select multiple categories) (done)
 
 [done] 21)  vendor can purchase own or other 3rd party supplier.            
 
@@ -34,35 +34,32 @@
             // db table -> `sales_return` add column `reason` type text
 
 
+[semi-done] 19) profile image to picture, Shop/Brand Image to logo (compress image)
+                // need to study further for better compression package 
+
 
 [error] 25) at the time of product entry, can’t create new line in the description and need the text area like doc file. (texit editor like interface)
             // time-expensive modification, need to change package and a lot of programming logic
 
-10) News 
-    // dependency : Sajib bhai for sub-domain and server
+10) News // dependency : sub-domain and server
 
+29) City Bank Payment Gateway (microservice + front) // dependency : sub-domain and server for microservice
 
+11) customer review (front, admin) // need to understand client's requirements
 
+20) Vendor all image (Like: banner, products, profile, brand logo) can be deleted by admin.
 
-11) customer review (front, admin)
-
-19) profile image to picture, Shop/Brand Image to logo (compress image)
-
-20) Vendor all image (Like: banner, products, profile, brand logo) can be delete by admin.
-
-29) City Bank Payment Gateway (microservice + front)
-
-X 27) global specification system. 
 
 
 ========================================================================================================================================
 
 DB Table modifications: 
 
-1. table `inv_purchase` > add column `vat_registration` type varchar 255
+1. table `inv_purchase` > add columns `storedBy` type int 5, `vat_registration` type varchar 255
 2. table `inv_purchase_return` > add column `returnedBy` type int 5
 3. table `product_specification_names` > add column `specification_type` type varchar 255
-4. table `stock` > add columns `entry_by` type int 5 `entry_user_type` type varchar 255
+4. table `stock` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
+4. table `sales_details` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
 5. table `sales_return` > add column `reason` type text
 
 New DB table:

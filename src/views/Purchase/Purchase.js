@@ -1121,9 +1121,15 @@ class Purchase extends Component {
                             required={true}
                             value={this.state.SuplierName}
                             onChange={this.handleChange.bind(this)}
-                          >
-                            <option value="">select</option>
-                            <option value="0">Admin</option>
+                          >                            
+                            {localStorage.user_type == "vendor" ? (
+                              <option value="">Please Select</option>
+                              ) : (
+                                <>
+                                  <option value="">Please Select</option>
+                                  <option value="0">Admin</option>
+                                </>
+                            )}
                             {this.state.vendorListAll.map(
                               (vendorListValue, key) => (
                                 <option value={vendorListValue.id} key={key}>
@@ -1738,7 +1744,7 @@ class Purchase extends Component {
                       {this.state.sizeList.length > 0
                         ? this.state.sizeList.map((sizeListValue, key) => (
                             <option value={sizeListValue.id} key={key}>
-                              {sizeListValue.size}
+                              {sizeListValue.Size}
                             </option>
                           ))
                         : null}

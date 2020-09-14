@@ -1141,6 +1141,82 @@ routes.get("/search_products_for_purchase", verifyToken, (req, res) => {
 });
 
 
+routes.get("/search_purchase_products", verifyToken, (req, res) => {
+  console.log("Vendor Values : ", req.query.vendorId);
+  console.log("Vendor Values : ", req.query.id);
+
+  jwt.verify(req.token, "secretkey", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      var searchedProducts = [];
+
+      new Promise(function (resolve, reject) {
+        dbConnection.query(
+          'SELECT id FROM products WHERE vendor_id = "' +
+            req.query.vendorId +
+            '" AND ( LOWER(product_name) LIKE "%' +
+            req.query.id +
+            '%" OR LOWER(product_sku) LIKE "%' +
+            req.query.id +
+            '%" ) ',
+          function (error, results, fields) {
+            console.log(results);
+            if (error) throw error;
+            (results.length > 0) ? resolve(results) : reject("rejected");            
+          }
+        );
+      })
+        .then(function (purchaseElements) {
+          console.log('purchaseElements : ', purchaseElements);
+
+          async.forEachOf(
+            purchaseElements,
+            function (purchaseElement, i, inner_callback) {
+              var select_sql =
+                "SELECT products.id AS id, products.product_name AS product_name, products.product_sku AS product_sku FROM products JOIN inv_purchase_details ON products.id = inv_purchase_details.productId WHERE products.id='" +
+                purchaseElement.id +
+                "' AND inv_purchase_details.productId='" +
+                purchaseElement.id +
+                "' ";
+
+              dbConnection.query(select_sql, function (err, results, fields) {
+                if (!err) {
+                  if (results.length > 0) {
+                    searchedProducts.push(results);
+                  }
+
+                  inner_callback(null);
+                } else {
+                  console.log("Error while performing Query");
+                  inner_callback(err);
+                }
+              });
+            },
+            function (err) {
+              if (err) {
+                //handle the error if the query throws an error
+                console.log("Error at ASYNC");
+                return res.send({ data: [], message: "data" });
+              } else {
+                //whatever you wanna do after all the iterations are done
+                console.log("Success at ASYNC");
+                return res.send({ data: searchedProducts, message: "data" });
+              }
+            }
+          );
+        })
+        .catch(function (reject) {
+          console.log("Rejected");
+          return res.send({ data: [], message: "data" });
+        });
+
+      // return res.send({ success: 'true', data: req.query.id, message: 'data' });
+    }
+  });
+});
+
+
 // PRODUCT WISE SPECIFICATION 
 
 routes.get('/getSpecificationNamesValues', verifyToken, async function (req, res) {
@@ -1181,7 +1257,7 @@ routes.get('/getSpecificationNamesValues', verifyToken, async function (req, res
             : parse_specification_values[0].Roman_Number;
         }      
         console.log('sizeList : ', sizeList);
-        
+
         return res.send({ success : true, data : get_specification_list, colorList : colorList, sizeList : sizeList });
       } catch (e) {
         console.log('Error : ', e);
@@ -1204,5 +1280,8 @@ routes.get("/getSizeInfos", async function (req, res) {
     return res.send({ success: true, data: [] });
   }
 });
+
+
+
 
 module.exports = routes;

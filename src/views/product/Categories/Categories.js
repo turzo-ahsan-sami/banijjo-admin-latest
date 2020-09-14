@@ -57,7 +57,8 @@ class Categories extends Component {
       categoryDescription: '',
       isActive: '',
       isUpdateClicked: false,
-      categoryID: ''
+      categoryID: '',
+      user_type: "",
     };
 
     this.handleGet = this.handleGet.bind(this);
@@ -75,10 +76,13 @@ class Categories extends Component {
 
     const userName = localStorage.getItem('userName');
     const userPassword = localStorage.getItem('userPassword');
+    
     if(userName===null && userPassword === null)
     {
       this.props.history.push("/login");
     }
+
+    this.state.user_type = localStorage.getItem("user_type");
 
     fetch(base+'/api/categories', {
       method: 'GET'
@@ -336,22 +340,40 @@ class Categories extends Component {
                 </Col>
               </FormGroup>
 
-              <FormGroup row>
-                <Col md="3">
-                  <Label htmlFor="parentCategory">Parent Category</Label>
-                </Col>
-                <Col xs="12" md="9">
-                  <Input type="select" name="parentCategory" id="parentCategory" value={this.state.parentCategory} onChange={this.handleChange}>
-                    <option value="0">Please select</option>
-                    {
-                      this.state.productsSpecialCategory.map((productsCategoryValue, key) =>
-                        // productsCategory.parent_category_id == productsCategoryValue.id ? productsCategoryValue.category_name : null
-                        <option value={key}> {productsCategoryValue} </option>
-                      )
-                    }
-                  </Input>
-                </Col>
-              </FormGroup>
+              {this.state.user_type == "vendor" ? (
+                <FormGroup row>
+                  <Col md="3">
+                    <Label htmlFor="parentCategory">Parent Category</Label>
+                  </Col>
+                  <Col xs="12" md="9">
+                    <Input type="select" name="parentCategory" id="parentCategory" value={this.state.parentCategory} onChange={this.handleChange} required="true">
+                      <option value="">Please select</option>
+                      {
+                        this.state.productsSpecialCategory.map((productsCategoryValue, key) =>
+                          <option value={key}> {productsCategoryValue} </option>
+                        )
+                      }
+                    </Input>
+                  </Col>
+                </FormGroup>
+              ) : (
+                <FormGroup row>
+                  <Col md="3">
+                    <Label htmlFor="parentCategory">Parent Category</Label>
+                  </Col>
+                  <Col xs="12" md="9">
+                    <Input type="select" name="parentCategory" id="parentCategory" value={this.state.parentCategory} onChange={this.handleChange}>
+                      <option value="0">Please select</option>
+                      {
+                        this.state.productsSpecialCategory.map((productsCategoryValue, key) =>
+                          <option value={key}> {productsCategoryValue} </option>
+                        )
+                      }
+                    </Input>
+                  </Col>
+                </FormGroup>
+              )}
+
 
               <FormGroup row>
                 <Col md="3">
