@@ -1924,10 +1924,7 @@ class Purchase extends Component {
           </Modal>
         </Row>
 
-        <style jsx="true">{`
-        .modal-content {
-          margin-top: 20% !important;
-      `}</style>
+        <style jsx="true">{`.modal-content { margin-top: 20% !important; `}</style>
       </>
     );
   }

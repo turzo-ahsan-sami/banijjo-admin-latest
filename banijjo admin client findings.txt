@@ -4,6 +4,8 @@
 #
 
 
+[to do] ##  Sales Details report fix (http://localhost:3005/sales/sales)
+
 [done]  ##  `sales` and `sales_details` > vendor_id (admin/others) wise calculation needs to be done from the front end 
             // solution: table `sales_details` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
 

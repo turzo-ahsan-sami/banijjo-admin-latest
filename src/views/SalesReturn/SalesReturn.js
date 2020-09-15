@@ -655,6 +655,7 @@ class SalesReturn extends Component {
   render() {
 
     return (
+      <>
       <Row>
         <ToastsContainer store={ToastsStore}/>
 
@@ -938,6 +939,11 @@ class SalesReturn extends Component {
 
     </Row>
 
+      <style jsx="true">{`
+      .modal-content {
+        margin-top: 20% !important;
+      `}</style>
+      </>
     )
   }
 }
