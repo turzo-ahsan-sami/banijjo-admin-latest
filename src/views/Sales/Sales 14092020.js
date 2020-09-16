@@ -98,7 +98,7 @@ class SalesReturn extends Component {
     }
 
     if (localStorage.user_type === "vendor") {
-      fetch(base + `/apiv2/vendor_sales_info?id=${localStorage.employee_id}`, {
+      fetch(base + `/api/vendor_sales_info?id=${localStorage.employee_id}`, {
         method: "GET",
       })
         .then((res) => {
@@ -118,7 +118,7 @@ class SalesReturn extends Component {
       localStorage.user_type != "vendor" &&
       localStorage.user_type != "delivery_man"
     ) {
-      fetch(base + "/apiv2/sales_info", {
+      fetch(base + "/api/sales_info", {
         method: "GET",
       })
         .then((res) => {
@@ -145,7 +145,7 @@ class SalesReturn extends Component {
       //     large: !this.state.large,
       // });
       if (localStorage.user_type === "vendor") {
-        fetch(base + "/apiv2/accept_sale", {
+        fetch(base + "/api/accept_sale", {
           method: "POST",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(this.state),
@@ -175,7 +175,7 @@ class SalesReturn extends Component {
             return false;
           });
       } else {
-        fetch(base + "/apiv2/confirm_sale", {
+        fetch(base + "/api/confirm_sale", {
           method: "POST",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(this.state),
@@ -210,7 +210,7 @@ class SalesReturn extends Component {
 
       fetch(
         base +
-          `/apiv2/accept_sale_by_admin?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/accept_sale_by_admin?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -244,7 +244,7 @@ class SalesReturn extends Component {
     } else if (event === "Yes processing vendor") {
       fetch(
         base +
-          `/apiv2/processing_sale?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/processing_sale?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -278,7 +278,7 @@ class SalesReturn extends Component {
     } else if (event === "Yes processing") {
       fetch(
         base +
-          `/apiv2/processing_sale?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/processing_sale?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -312,7 +312,7 @@ class SalesReturn extends Component {
     } else if (event === "Yes ready to deliver") {
       fetch(
         base +
-          `/apiv2/ready_to_deliver_sale?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/ready_to_deliver_sale?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -346,7 +346,7 @@ class SalesReturn extends Component {
     } else if (event === "Yes on going") {
       fetch(
         base +
-          `/apiv2/on_going_sale?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/on_going_sale?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -380,7 +380,7 @@ class SalesReturn extends Component {
     } else if (event === "Yes delivered") {
       fetch(
         base +
-          `/apiv2/delivered_sale?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/delivered_sale?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -414,7 +414,7 @@ class SalesReturn extends Component {
     } else if (event === "Yes returned") {
       fetch(
         base +
-          `/apiv2/returned_sale?editID=${this.state.editID}&vendor_id=${value}`,
+          `/api/returned_sale?editID=${this.state.editID}&vendor_id=${value}`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -465,7 +465,7 @@ class SalesReturn extends Component {
 
     fetch(
       base +
-        `/apiv2/sales_details_info?id=${event.currentTarget.dataset["id"]}&userId=${localStorage.employee_id}`,
+        `/api/sales_details_info?id=${event.currentTarget.dataset["id"]}&userId=${localStorage.employee_id}`,
       {
         method: "GET",
       }
@@ -503,7 +503,7 @@ class SalesReturn extends Component {
     const sales_id = this.state.sales_id;
 
     const sales_info = await axios.get(
-      `${base}/apiv2/get_sales_info/${sales_id}`
+      `${base}/api/get_sales_info/${sales_id}`
     );
     
 

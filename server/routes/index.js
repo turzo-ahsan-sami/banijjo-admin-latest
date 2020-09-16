@@ -1153,7 +1153,7 @@ routes.get("/search_purchase_products", verifyToken, (req, res) => {
 
       new Promise(function (resolve, reject) {
         dbConnection.query(
-          'SELECT id FROM products WHERE vendor_id = "' +
+          'SELECT id FROM products WHERE entry_by = "' +
             req.query.vendorId +
             '" AND ( LOWER(product_name) LIKE "%' +
             req.query.id +
@@ -1282,6 +1282,277 @@ routes.get("/getSizeInfos", async function (req, res) {
 });
 
 
+// SALES REPORT
+
+routes.get("/vendor_sales_info", async function (req, res) {
+  try {
+    const get_salaes_info = await query(
+      "SELECT sales.id AS id, sales.sales_bill_no AS sales_bill_no, sales.sales_type, sales.sales_date AS sales_date, sales_details.sales_product_quantity AS total_sales_quantity, sales_details.total_amount AS total_sales_amount, sales_details.discounts_amount AS discount_amount, sales.isConfirmed AS isConfirmed, sales.isEMI AS isEMI FROM sales JOIN sales_details ON sales.id = sales_details.salesBillId JOIN products ON sales_details.productId = products.id WHERE sales.softDel = 0 AND sales.status = 1 AND sales.isConfirmed = 2 AND products.entry_by = " +
+        req.query.id
+    );
+
+    return res.send({ success: true, sales: get_salaes_info });
+  } catch (e) {
+    return res.send({
+      success: false,
+      message: "Something went wrong!",
+      error: e,
+    });
+  }
+});
+
+routes.get('/sales_details_info', async function (req,res){
+  try {
+      console.log('Sales Id : ', req.query.id);
+
+      var product_info = [];
+
+      var get_salaes_details_info = ''
+
+      const get_salaes_info = await query ('SELECT * FROM sales WHERE softDel = 0 AND status = 1 AND id = '+ req.query.id);
+
+      const get_customer_info = await query ('SELECT * FROM customer WHERE status = 1 AND id = '+get_salaes_info[0].customer_id);
+
+      console.log('req.query.userId : ', req.query.userId);
+
+      if (req.query.userId == 0) {
+          get_salaes_details_info = await query ('SELECT * FROM sales_details WHERE status = 1 AND salesBillId = '+ req.query.id);
+      }
+      else {
+          console.log('for vendor ...');
+          // WE NEED TO JOIN PRODUCT TABLE TO GET VENDOR WISE INFO
+          get_salaes_details_info = await query ('SELECT sales_details.id AS id, sales_details.productId AS productId, sales_details.colorId AS colorId, sales_details.sizeId AS sizeId, sales_details.salesBillId AS salesBillId, sales_details.sales_product_quantity AS sales_product_quantity, sales_details.unitPrice AS unitPrice, sales_details.total_amount AS total_amount, sales_details.customer_payable_amount AS customer_payable_amount, sales_details.deliveryCharge AS deliveryCharge, sales_details.chalan_no AS chalan_no, sales_details.discounts_amount AS discounts_amount, sales_details.isAcceptedByVendor AS isAcceptedByVendor, sales_details.delivery_status AS delivery_status FROM sales_details JOIN products ON sales_details.productId = products.id WHERE sales_details.status = 1 AND sales_details.salesBillId = '+ req.query.id+' AND products.entry_by = '+req.query.userId);
+      }
+
+      console.log('Slaes Details table info : ', get_salaes_details_info);
+
+      for (var i = 0; i < get_salaes_details_info.length; i++) {
+          var product_obj = {};
+
+          const get_product_info = await query ('SELECT product_name, brand_name, entry_by, entry_user_type FROM products WHERE softDelete = 0 AND status = 1 AND id = '+ get_salaes_details_info[i].productId);
+          console.log('Product Info : ', get_product_info);
+
+          const get_color_info = await query ('SELECT name FROM color_infos WHERE id = '+ get_salaes_details_info[i].colorId);
+          const get_size_info = await query ('SELECT size FROM size_infos WHERE id = '+ get_salaes_details_info[i].sizeId);
+
+          console.log(get_color_info);
+          console.log(get_size_info);
+
+          const customer_info = await query ('SELECT name, email, address FROM customer WHERE status = 1 AND id = '+get_salaes_info[0].customer_id)
+
+          product_obj.product_name = get_product_info[0].product_name;
+          product_obj.brand = get_product_info[0].brand_name;
+          product_obj.user_type = get_product_info[0].entry_user_type;
+          product_obj.vendor_id = get_product_info[0].entry_by;
+          product_obj.color = get_color_info.length > 0 ? get_color_info[0].name : '';
+          product_obj.size = get_size_info.length > 0 ? get_size_info[0].size : '';
+          product_obj.salesId = get_salaes_details_info[i].salesBillId;
+          product_obj.salesDetailsId = get_salaes_details_info[i].id;
+          product_obj.sales_product_quantity = get_salaes_details_info[i].sales_product_quantity;
+          product_obj.unitPrice = get_salaes_details_info[i].unitPrice;
+          product_obj.total_amount = get_salaes_details_info[i].total_amount;
+          product_obj.customer_payable_amount = get_salaes_details_info[i].customer_payable_amount;
+          product_obj.deliveryCharge = get_salaes_details_info[i].deliveryCharge;
+          product_obj.chalan_no = get_salaes_details_info[i].chalan_no;
+          product_obj.discounts_amount = get_salaes_details_info[i].discounts_amount;
+          product_obj.is_accepted = get_salaes_details_info[i].isAcceptedByVendor;
+          product_obj.delivery_status = get_salaes_details_info[i].delivery_status;
+          product_obj.sales_type = get_salaes_info[0].sales_type;
+          product_obj.isEMI = get_salaes_info[0].isEMI;
+          product_obj.customer_name = get_salaes_info[0].name;
+          product_obj.customer_email = get_salaes_info[0].email;
+          product_obj.customer_address = get_salaes_info[0].address;
+          product_obj.sales_date = get_salaes_info[0].sales_date;
+
+          product_info.push(product_obj);
+      }
+
+      return res.send({success: true, sales_details: get_salaes_details_info, product_info: product_info, sales_info: get_salaes_info[0], customer_info: get_customer_info[0]});
+  } catch (e) {
+      console.log('Error : ', e);
+
+      return res.send({success: false, message: 'Something went wrong!', error: e});
+  }
+});
+
+
+
+routes.get('/get_sales_info/:id', async function (req,res){
+  const { id } = req.params;
+  try {
+      const get_salaes_info = await query (`SELECT * FROM sales WHERE id = ${id}`);
+      return res.send({success: true, sales: get_salaes_info});
+  } catch (e) {
+      return res.send({success: false, message: 'Something went wrong!', error: e});
+  }
+});
+
+routes.get('/sales_info', async function (req,res){
+  console.log('api call check...');
+  try {
+      const get_salaes_info = await query ('SELECT * FROM sales WHERE softDel = 0 AND status = 1');
+
+      console.log('Sales table data : ', get_salaes_info);
+
+      return res.send({success: true, sales: get_salaes_info});
+
+  } catch (e) {
+      console.log('Error : ', e);
+
+      return res.send({success: false, message: 'Something went wrong!', error: e});
+  }
+});
+
+
+
+routes.get('/vendor_sales_courier_info', async function (req,res){
+  try {
+      const get_salaes_info = await query ('SELECT sales.id AS id, sales.sales_bill_no AS sales_bill_no, sales.sales_type, sales.sales_date AS sales_date, sales_details.sales_product_quantity AS total_sales_quantity, sales_details.total_amount AS total_sales_amount, sales_details.discounts_amount AS discount_amount, sales_details.courier_partner, sales_details.courier_order_code, sales.isConfirmed AS isConfirmed, sales.isEMI AS isEMI FROM sales JOIN sales_details ON sales.id = sales_details.salesBillId JOIN products ON sales_details.productId = products.id WHERE sales.softDel = 0 AND sales.status = 1 AND sales_details.courier_order_code IS NOT NULL AND products.entry_by = '+req.query.id);
+      const get_salaes_productid = await query ('SELECT productId FROM sales_details WHERE status = 1');
+      return res.send({success: true, sales: get_salaes_info});
+  } catch (e) {       
+      return res.send({success: false, message: 'Something went wrong!', error: e});
+  }
+});
+
+
+routes.post('/confirm_sale', async function (req,res){
+  try {
+      const confirm_sale = await query ('UPDATE sales SET isConfirmed = 2 WHERE id = '+req.body.editID);
+
+      const get_sales_bill_no = await query ('SELECT sales_bill_no FROM sales WHERE softDel = 0 AND status = 1 AND isConfirmed = 2 AND id = '+req.body.editID);
+
+      const get_vendors_unique_id = await query ('SELECT DISTINCT products.entry_by AS vendor_id FROM sales_details JOIN products ON sales_details.productId = products.id WHERE sales_details.salesBillId = '+req.body.editID);
+
+      console.log('get_vendors_unique_id : ', get_vendors_unique_id);
+
+      for (var i = 0; i < get_vendors_unique_id.length; i++) {
+
+          const get_email = await query ('SELECT email FROM user WHERE employee_id = '+get_vendors_unique_id[i].vendor_id);
+
+          if (get_email.length > 0) {
+
+              try {
+                  const cipher = crypto.createCipher('aes192', 'a password');
+                  var encrypted = cipher.update(get_email[0].email, 'utf8', 'hex');
+                  encrypted += cipher.final('hex');
+
+                  // var url = `http://localhost:3005/resetpassword/${encrypted}`
+
+                  var mailOption = {
+                      from : 'info@banijjo.com.bd',
+                      to : get_email[0].email,
+                      subject : 'Sales',
+                      // text : 'Another sale! Please login to admin panel to check the activity.',
+                      html: `<strong>Another sale!</strong> Please login to admin panel to check the activity. Current Sales Bill No is : <strong>"${get_sales_bill_no[0].sales_bill_no}"</strong>`
+                  }
+
+                  mailBox.sendMail(mailOption, function (error, info) {
+                      if (error) {
+                          console.log(error);
+                      }
+                      else {
+                          console.log('Email sent : ', info,process);
+                      }
+                  });
+              } catch (e) {
+                  console.log('Error at the time sending email : ', e);
+              }
+          }
+
+      }
+
+      return res.send({success: true});
+  } catch (e) {
+      console.log('Error : ', e);
+
+      return res.send({success: false, message: 'Something went wrong!', error: e});
+  }
+});
+
+routes.post('/accept_sale', async function (req,res){
+  try {
+      const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.isAcceptedByVendor = 2 WHERE sales_details.salesBillId = '+req.body.editID+' AND products.entry_by = '+req.body.employee_id);
+
+      return res.send({success: true});
+  } catch (e) {
+      console.log('Error : ', e);
+
+      return res.send({success: false, message: 'Something went wrong!', error: e});
+  }
+});
+
+routes.post('/accept_sale_by_admin', async function (req,res){
+try {
+    const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.isAcceptedByVendor = 2 WHERE sales_details.salesBillId = '+req.query.editID+' AND products.entry_by = '+req.query.vendor_id);
+
+    return res.send({success: true});
+} catch (e) {
+    console.log('Error : ', e);
+
+    return res.send({success: false, message: 'Something went wrong!', error: e});
+}
+});
+
+routes.post('/processing_sale', async function (req,res){
+try {
+    const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.delivery_status = 2 WHERE sales_details.salesBillId = '+req.query.editID+' AND products.entry_by = '+req.query.vendor_id);
+
+    return res.send({success: true});
+} catch (e) {
+    console.log('Error : ', e);
+
+    return res.send({success: false, message: 'Something went wrong!', error: e});
+}
+});
+
+routes.post('/ready_to_deliver_sale', async function (req,res){
+try {
+    const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.delivery_status = 3 WHERE sales_details.salesBillId = '+req.query.editID+' AND products.entry_by = '+req.query.vendor_id);
+
+    return res.send({success: true});
+} catch (e) {
+    console.log('Error : ', e);
+
+    return res.send({success: false, message: 'Something went wrong!', error: e});
+}
+});
+
+routes.post('/delivered_sale', async function (req,res){
+try {
+    const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.delivery_status = 5 WHERE sales_details.salesBillId = '+req.query.editID+' AND products.entry_by = '+req.query.vendor_id);
+
+    return res.send({success: true});
+} catch (e) {
+    console.log('Error : ', e);
+
+    return res.send({success: false, message: 'Something went wrong!', error: e});
+}
+});
+
+routes.post('/returned_sale', async function (req,res){
+try {
+    const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.delivery_status = 6 WHERE sales_details.salesBillId = '+req.query.editID+' AND products.entry_by = '+req.query.vendor_id);
+
+    return res.send({success: true});
+} catch (e) {
+    console.log('Error : ', e);
+
+    return res.send({success: false, message: 'Something went wrong!', error: e});
+}
+});
+
+routes.post('/on_going_sale', async function (req,res){
+try {
+    const confirm_sale = await query ('UPDATE sales_details JOIN products ON sales_details.productId = products.id SET sales_details.delivery_status = 4 WHERE sales_details.salesBillId = '+req.query.editID+' AND products.entry_by = '+req.query.vendor_id);
+
+    return res.send({success: true});
+} catch (e) {
+    console.log('Error : ', e);
+
+    return res.send({success: false, message: 'Something went wrong!', error: e});
+}
+});
 
 
 module.exports = routes;
