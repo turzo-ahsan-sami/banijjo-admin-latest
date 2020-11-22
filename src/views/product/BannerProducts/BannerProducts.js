@@ -39,6 +39,7 @@ import {
 
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
 const publicUrl = process.env.REACT_APP_PUBLIC_URL;
+const REACT_APP_STORE_NAME = process.env.REACT_APP_STORE_NAME;
 
 class BannerProducts extends Component {
   constructor(props) {
@@ -150,7 +151,8 @@ class BannerProducts extends Component {
             });
 
             setTimeout(() => {
-                if (window.location.host == 'store.banijjo.com.bd') {
+                // if (window.location.host == 'store.banijjo.com.bd' || window.location.host == 'store.banijjo.com') {
+                if (window.location.host == REACT_APP_STORE_NAME) {
                     this.setState({
                         dateFrom: banner.data[0].effective_from.split("T")[0],
                         dateTo: banner.data[0].effective_to.split("T")[0],

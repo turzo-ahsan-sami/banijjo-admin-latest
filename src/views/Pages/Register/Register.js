@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../../assets/img/brand/logo_head_left.png'
+// import logo from '../../../assets/img/brand/logo_head_left.png'
+import logo from '../../../assets/img/brand/logo_head_left.com.png'
+
 import  { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
+const REACT_APP_FRONT_URL = process.env.REACT_APP_FRONT_URL;
 
 const Login = React.lazy(() => import('../Login'));
 
@@ -352,7 +356,14 @@ class Register extends Component {
                     <Row>
                         <Col xs="12" className="text-center">
                             {/* <img src={logo} alt="banijjo" width="160" height="100" /> */}
-                            <AppNavbarBrand full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }}  href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"/>
+                            <AppNavbarBrand 
+                              // full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }}  
+                              full={{ src: logo, width: 250, alt: 'banijjo.com Logo' }} 
+                              // href="https://banijjo.com.bd" 
+                              href={`${REACT_APP_FRONT_URL}`}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                            />
                             {/* <a href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"></a> */}
                         </Col>
                     </Row>

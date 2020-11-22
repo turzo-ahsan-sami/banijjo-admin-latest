@@ -4,7 +4,8 @@ import ImageUploader from 'react-images-upload';
 import axios from 'axios';
 import { MDBDataTable } from 'mdbreact';
 import { MDBBtn, MDBTable, MDBTableBody, MDBTableHead  } from 'mdbreact';
-
+const base = process.env.REACT_APP_ADMIN_SERVER_URL; 
+const publicUrl = process.env.REACT_APP_PUBLIC_URL; 
 
 import {
   Badge,
@@ -1449,7 +1450,7 @@ class Products extends Component {
 
     this.state.vendorId = event.target.value;
 
-    fetch(`http://store.banijjo.com.bd:3002/api/getVendorWiseProductList/?id=${event.target.value}` , {
+    fetch(base+`/api/getVendorWiseProductList/?id=${event.target.value}` , {
       method: "GET"
     })
     .then((result) => result.json())

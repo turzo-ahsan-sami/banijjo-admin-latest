@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../../assets/img/brand/logo_head_left.png'
+// import logo from '../../../assets/img/brand/logo_head_left.png'
+import logo from '../../../assets/img/brand/logo_head_left.com.png'
 import sygnet from '../../../assets/img/brand/sygnet.svg'
 
 import {
@@ -28,6 +29,8 @@ import cookie from 'react-cookies';
 import './loginModal.css';
 
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
+const REACT_APP_FRONT_URL = process.env.REACT_APP_FRONT_URL;
+
 let exportToken = '';
 class Login extends Component {
 
@@ -276,8 +279,20 @@ class Login extends Component {
                       <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" onSubmit={this.handleSubmit}  onChange={this.handleProductChange}>
 
                       <center>
-                        <AppNavbarBrand full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }}  href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"/>
-                        <a href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"></a>
+                        <AppNavbarBrand 
+                          // full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }}  
+                          full={{ src: logo, width: 250, alt: 'banijjo.com Logo' }}  
+                          // href="https://banijjo.com.bd" 
+                          href={`${REACT_APP_FRONT_URL}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        />
+                        <a 
+                          // href="https://banijjo.com.bd" 
+                          href={`${REACT_APP_FRONT_URL}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        ></a>
                       </center>
 
                         <p className="text-muted">Sign In to your account</p>

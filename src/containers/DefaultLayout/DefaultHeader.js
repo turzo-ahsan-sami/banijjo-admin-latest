@@ -7,10 +7,14 @@ import PropTypes from 'prop-types';
 import cookie from 'react-cookies';
 
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../assets/img/brand/logo_head_left.png'
+// import logo from '../../assets/img/brand/logo_head_left.png'
+import logo from '../../assets/img/brand/logo_head_left.com.png'
+
 import minimize_log from '../../assets/img/brand/final_image.png'
 import sygnet from '../../assets/img/brand/sygnet.svg'
+
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
+const REACT_APP_FRONT_URL = process.env.REACT_APP_FRONT_URL;
 
 const propTypes = {
   children: PropTypes.node,
@@ -182,7 +186,10 @@ class DefaultHeader extends Component {
         <AppNavbarBrand
           full={{ src: logo, width: 80, height: 50, alt: 'CoreUI Logo' }}
           minimized={{ src: minimize_log, width: 30, height: 30, alt: 'CoreUI Logo' }}
-          href="http://banijjo.com" target="_blank" rel="noopener noreferrer"
+          // href="http://banijjo.com" 
+          href={`${REACT_APP_FRONT_URL}`}
+          target="_blank" 
+          rel="noopener noreferrer"
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
 

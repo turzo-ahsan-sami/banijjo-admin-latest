@@ -7472,12 +7472,54 @@ app.get('/', async function (req,res){
 
 
 /*
-* API Files
+* E-COURIER API | Turzo Ahsan Sami | 20 August 2020
 */
 
-const api = require('./api');
-app.use('/api', api);
+app.get("/api/getSaleProductCustomerDetails/:sales_id", async (req, res) => {
+  const { sales_id } = req.params;
+  try {
+    const sales_product_customer_details = await query(`
+      SELECT 
+      pd.id, pd.product_specification_name, 
+      sd.salesBillId, sd.customerId, sd.total_amount, sd.customer_payable_amount, sd.sales_product_quantity, sd.courier_order_code, 
+      cust.name, cust.email, cust.phone_number, cust.address, cust.city, cust.thana, cust.area, cust.zipcode
+      FROM products as pd
+      INNER JOIN sales_details as sd 
+      ON pd.id = sd.productId
+      INNER JOIN customers_address as cust
+      ON cust.id = sd.customerId
+      where sd.salesBillId=${sales_id} and sd.status=1;
+    `)
+    res.json(sales_product_customer_details);    
+  } catch (e) {
+    console.error(e.message);
+    res.send("Server Error");
+  }
+});
 
+
+app.get("/api/updateSalesDetailsForCourier/:sales_id/:order_id/:courier_partner", async (req, res) => {
+  const { sales_id, order_id, courier_partner } = req.params;
+  console.log('sales_id...', sales_id);
+  console.log('order_id...', order_id);
+  console.log('courier_partner...', courier_partner);
+  try {
+    updateSalesDetailsForCourier = await query(`
+      UPDATE sales_details 
+      SET courier_partner = '${courier_partner}', courier_order_code = '${order_id}'
+      WHERE salesBillId = ${sales_id}
+    `);
+    console.log(updateSalesDetailsForCourier)
+    return res.send({ success: true, message: 'success' });
+  } catch (e) {
+    console.error(e.message);
+    res.send("Server Error");
+  }
+});
+
+/*
+* New API Files
+*/
 
 const routes = require('./routes');
 app.use('/apiv2', routes);

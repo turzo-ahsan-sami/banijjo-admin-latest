@@ -4,7 +4,8 @@ import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/reac
 import  { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import logo from '../../../assets/img/brand/logo_head_left.png'
+// import logo from '../../../assets/img/brand/logo_head_left.png'
+import logo from '../../../assets/img/brand/logo_head_left.com.png'
 
 
 import {  Badge,Label,FormGroup, Button, Card, CardGroup, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';

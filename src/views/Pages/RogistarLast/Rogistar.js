@@ -6,6 +6,9 @@ import {  Label,FormGroup, Button, Card, CardBody, CardFooter, Col, Container, F
 
 const Login = React.lazy(() => import('../Login'));
 
+const base = process.env.REACT_APP_ADMIN_SERVER_URL; 
+const publicUrl = process.env.REACT_APP_PUBLIC_URL;
+
 class Rogistar extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +51,7 @@ class Rogistar extends Component {
     
     console.log('Presonal Details : ', this.state);
 
-    fetch('http://store.banijjo.com.bd:3002/api/vendor-details-personal' , {
+    fetch(base+'/api/vendor-details-personal' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json',
@@ -85,7 +88,7 @@ class Rogistar extends Component {
 
     // this.setState({stateNext: 'three'});
 
-    fetch('http://store.banijjo.com.bd:3002/api/vendor-details-shop' , {
+    fetch(base+'/api/vendor-details-shop' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json',
@@ -133,7 +136,7 @@ class Rogistar extends Component {
   handleClickThree () {
     console.log('Third Step : ', this.state);
     
-    fetch('http://store.banijjo.com.bd:3002/api/vendor-details-business' , {
+    fetch(base+'/api/vendor-details-business' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json'
@@ -166,7 +169,7 @@ class Rogistar extends Component {
   handleChildCategory = (event) => {
     console.log('parent value : ', event.target.value);
 
-    fetch(`http://store.banijjo.com.bd:3002/api/child-category/?id=${event.target.value}`, {
+    fetch(base+`/api/child-category/?id=${event.target.value}`, {
       method: 'GET'
     })
     .then(res => {
@@ -191,7 +194,7 @@ class Rogistar extends Component {
     this.state.vendorId = localStorage.getItem('employee_id');
     this.state.user_type = localStorage.getItem('user_type');
 
-    fetch('http://store.banijjo.com.bd:3002/api/parent-category', {
+    fetch(base+'/api/parent-category', {
       method: 'GET'
     })
     .then(res => {
@@ -256,7 +259,7 @@ class Rogistar extends Component {
     console.log('submitted JSON value : ', JSON.stringify(this.state));
     console.log('submitted value : ', this.state);
 
-    fetch('http://store.banijjo.com.bd:3002/api/vendor-registration' , {
+    fetch(base+'/api/vendor-registration' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json'

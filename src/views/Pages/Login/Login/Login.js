@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../../assets/img/brand/logo_head_left.png'
+// import logo from '../../../assets/img/brand/logo_head_left.png'
+import logo from '../../../assets/img/brand/logo_head_left.com.png'
+
 import sygnet from '../../../assets/img/brand/sygnet.svg'
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import {ToastsContainer, ToastsStore} from 'react-toasts';

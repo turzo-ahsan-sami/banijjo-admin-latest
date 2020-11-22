@@ -34,7 +34,7 @@ import {
 } from 'reactstrap';
 
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
-
+const REACT_APP_STORE_NAME = process.env.REACT_APP_STORE_NAME;
 
 class VatTax extends Component {
   constructor(props) {
@@ -101,7 +101,8 @@ class VatTax extends Component {
             });
 
             setTimeout(() => {
-                if (window.location.host == 'store.banijjo.com.bd') {
+                // if (window.location.host == 'store.banijjo.com.bd' || window.location.host == 'store.banijjo.com') {
+                if (window.location.host == REACT_APP_STORE_NAME) {
                     this.setState({
                         date: vatTax.data[0].effective_date.split("T")[0],
                     })

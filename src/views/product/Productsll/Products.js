@@ -33,6 +33,9 @@ import {
   ModalHeader,
 } from 'reactstrap';
 
+const base = process.env.REACT_APP_ADMIN_SERVER_URL; 
+const publicUrl = process.env.REACT_APP_PUBLIC_URL; 
+
 const bgColors = { "Default": "#81b71a",
 "Blue": "#00B1E1",
 "Cyan": "#37BC9B",
@@ -129,7 +132,7 @@ class Products extends Component {
       this.props.history.push("/login");
     }
 
-    fetch('http://store.banijjo.com.bd:3002/api/categories', {
+    fetch(base+'/api/categories', {
       method: 'GET'
     })
     .then(res => {
@@ -145,7 +148,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://store.banijjo.com.bd:3002/api/product_specification_names', {
+    fetch(base+'/api/product_specification_names', {
       method: 'GET'
     })
     .then(res => {
@@ -162,7 +165,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://store.banijjo.com.bd:3002/api/product_specification_details', {
+    fetch(base+'/api/product_specification_details', {
       method: 'GET'
     })
     .then(res => {
@@ -179,7 +182,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://store.banijjo.com.bd:3002/api/vendor_list_for_product', {
+    fetch(base+'/api/vendor_list_for_product', {
       method: 'GET'
     })
     .then(res => {
@@ -202,7 +205,7 @@ class Products extends Component {
       return false;
     });
 
-    fetch('http://store.banijjo.com.bd:3002/api/user_list', {
+    fetch(base+'/api/user_list', {
       method: 'GET'
     })
     .then(res => {
@@ -223,7 +226,7 @@ class Products extends Component {
 
     console.log('Trying to fetch product !');
 
-    fetch(`http://store.banijjo.com.bd:3002/api/product_list/?id=${this.state.userName}`, {
+    fetch(base+`/api/product_list/?id=${this.state.userName}`, {
       method: 'GET'
     })
     .then(res => {
@@ -305,7 +308,7 @@ class Products extends Component {
     //   2000
     // );
 
-    fetch('http://store.banijjo.com.bd:3002/api/saveProduct' , {
+    fetch(base+'/api/saveProduct' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json'

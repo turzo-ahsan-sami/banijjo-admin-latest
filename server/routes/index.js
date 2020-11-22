@@ -62,9 +62,9 @@ routes.get("/check", (req, res) => {
 });
 
 /*
- ** START
- ** Product -> Specificaton -> Weight Type
- */
+** START
+** Product -> Specificaton -> Weight Type
+*/
 
 routes.get("/getWeightType", verifyToken, async function (req, res) {
   jwt.verify(req.token, "secretkey", async function (err, authData) {
@@ -195,14 +195,14 @@ routes.get("/deleteWeightType", verifyToken, async function (req, res) {
 });
 
 /*
- ** END
- ** Product -> Specificaton -> Weight Type
- */
+** END
+** Product -> Specificaton -> Weight Type
+*/
 
 /*
- ** START
- ** Product -> Specificaton -> Weight Info
- */
+** START
+** Product -> Specificaton -> Weight Info
+*/
 
 routes.post("/saveWeightInfo", verifyToken, async function (req, res) {
   jwt.verify(req.token, "secretkey", async function (err, authData) {
@@ -301,14 +301,14 @@ routes.get("/deleteWeightInfo", verifyToken, async function (req, res) {
 });
 
 /*
- ** END
- ** Product -> Specificaton -> Weight Info
- */
+** END
+** Product -> Specificaton -> Weight Info
+*/
 
 /*
- ** START
- ** Product -> Specificaton
- */
+** START
+** Product -> Specificaton
+*/
 
 routes.get("/product_specification_names", (req, res) => {
   dbConnection.query(
@@ -419,9 +419,9 @@ routes.get("/deleteProductSpecificationName", verifyToken, async function ( req,
 });
 
 /*
- ** END
- ** Product -> Specificaton
- */
+** END
+** Product -> Specificaton
+*/
 
 // Purchase
 
@@ -773,7 +773,6 @@ routes.get('/getPurchaseReturnInfoForUpdate', verifyToken, async function(req, r
 
 
 // ADD PRODUCT
-
 
 routes.post("/saveProduct", verifyToken, async function (req, res) {
   jwt.verify(req.token, "secretkey", async function (err, authData) {

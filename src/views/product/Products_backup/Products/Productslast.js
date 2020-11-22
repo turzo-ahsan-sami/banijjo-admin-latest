@@ -1449,7 +1449,7 @@ class Products extends Component {
 
     this.state.vendorId = event.target.value;
 
-    fetch(`http://store.banijjo.com.bd:3002/api/getVendorWiseProductList/?id=${event.target.value}` , {
+    fetch(base+`/api/getVendorWiseProductList/?id=${event.target.value}` , {
       method: "GET"
     })
     .then((result) => result.json())

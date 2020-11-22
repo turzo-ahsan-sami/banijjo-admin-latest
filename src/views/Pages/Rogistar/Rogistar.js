@@ -4,11 +4,15 @@ import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/reac
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import logo from '../../../assets/img/brand/logo_head_left.png'
+// import logo from '../../../assets/img/brand/logo_head_left.png'
+import logo from '../../../assets/img/brand/logo_head_left.com.png'
+
 
 
 import { Badge, Label, FormGroup, Button, Card, CardGroup, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
+const REACT_APP_FRONT_URL = process.env.REACT_APP_FRONT_URL;
 
 const Login = React.lazy(() => import('../Login'));
 
@@ -587,8 +591,19 @@ class Rogistar extends Component {
                       {/* <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" onSubmit={this.handleSubmit} onChange={this.handleProductChange}> */}
                       {/* <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" onSubmit={e => {e.preventDefault();}} onChange={this.handleProductChange}> */}
                         <center>
-                          <AppNavbarBrand full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }} href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer" />
-                          <a href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"></a>
+                          <AppNavbarBrand 
+                            full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }} 
+                            // href="https://banijjo.com.bd" 
+                            href={`${REACT_APP_FRONT_URL}`}
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                          />
+                          <a 
+                            // href="https://banijjo.com.bd" 
+                            href={`${REACT_APP_FRONT_URL}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          ></a>
                         </center>
 
                         <h2>Shop Preferences</h2>
@@ -726,8 +741,19 @@ class Rogistar extends Component {
                       {/* <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" onSubmit={this.handleSubmit} onChange={this.handleProductChange}> */}
                       <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" onChange={this.handleProductChange}>
                         <center>
-                          <AppNavbarBrand full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }} href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer" />
-                          <a href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"></a>
+                        <AppNavbarBrand 
+                            full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }} 
+                            // href="https://banijjo.com.bd" 
+                            href={`${REACT_APP_FRONT_URL}`}
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                          />
+                          <a 
+                            // href="https://banijjo.com.bd" 
+                            href={`${REACT_APP_FRONT_URL}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          ></a>
                         </center>
 
                         <h2>Business Preferences</h2>
@@ -991,8 +1017,19 @@ class Rogistar extends Component {
                     <CardBody>
                       <Form action="" method="post" encType="multipart/form-data" className="form-horizontal" onChange={this.handleProductChange}>
                         <center>
-                          <AppNavbarBrand full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }} href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer" />
-                          <a href="https://banijjo.com.bd" target="_blank" rel="noopener noreferrer"></a>
+                        <AppNavbarBrand 
+                            full={{ src: logo, width: 160, height: 100, alt: 'CoreUI Logo' }} 
+                            // href="https://banijjo.com.bd" 
+                            href={`${REACT_APP_FRONT_URL}`}
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                          />
+                          <a 
+                            // href="https://banijjo.com.bd" 
+                            href={`${REACT_APP_FRONT_URL}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          ></a>
                         </center>
 
                         <h2>Personal Preferences</h2>
