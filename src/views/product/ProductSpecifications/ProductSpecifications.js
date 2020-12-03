@@ -185,7 +185,7 @@ class ProductSpecifications extends Component {
         return false;
       });
 
-    fetch(base + "/apiv2/getWeightType", {
+    fetch(base + "/api/getWeightType", {
       method: "GET",
       headers: { Authorization: "Atiq " + cookie.load("token") },
     })
@@ -233,7 +233,7 @@ class ProductSpecifications extends Component {
         return false;
       });
 
-    fetch(base + "/apiv2/product_specification_names", {
+    fetch(base + "/api/product_specification_names", {
       method: "GET",
     })
       .then((res) => {
@@ -327,7 +327,7 @@ class ProductSpecifications extends Component {
     event.preventDefault();
     // return;
 
-    fetch(base + "/apiv2/saveSpecification", {
+    fetch(base + "/api/saveSpecification", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -380,7 +380,7 @@ class ProductSpecifications extends Component {
     if (event == "Yes") {
       console.log("Permitted");
       fetch(
-        base + `/apiv2/deleteProductSpecificationName/?id=${this.state.specId}`,
+        base + `/api/deleteProductSpecificationName/?id=${this.state.specId}`,
         {
           method: "GET",
           headers: { Authorization: "Atiq " + cookie.load("token") },

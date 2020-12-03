@@ -388,7 +388,8 @@ class Rogistar extends Component {
 
             ToastsStore.success("Business Information Succesfully inserted !!");
             localStorage.setItem('user_status', 'completed');
-            this.props.history.push("/");            
+            // this.props.history.push("/");      
+            window.location = '/login'      
           }
         })
         .catch(function (response) {

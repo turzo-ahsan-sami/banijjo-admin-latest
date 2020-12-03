@@ -99,6 +99,10 @@ class App extends Component {
 
   componentDidMount() {
     console.log('Working App.js .....');
+    let lastLoginDate = window.localStorage.getItem('lastLoginDate');
+    let currentDate = Date.now();
+    if(!lastLoginDate) window.localStorage.clear();
+    if(currentDate - lastLoginDate >= 21600000) window.localStorage.clear(); // log out after 6 hours
   }
 
 

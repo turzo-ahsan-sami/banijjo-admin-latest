@@ -57,13 +57,13 @@
 
 DB Table modifications: 
 
-1. table `inv_purchase` > add columns `storedBy` type int 5, `vat_registration` type varchar 255
-2. table `inv_purchase_return` > add column `returnedBy` type int 5
-4. table `products` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
-3. table `product_specification_names` > add column `specification_type` type varchar 255
-4. table `sales_details` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
-5. table `sales_return` > add column `reason` type text
-4. table `stock` > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
+1. table `inv_purchase`                 > add columns `storedBy` type int 5, `vat_registration` type varchar 255
+2. table `inv_purchase_return`          > add column `returnedBy` type int 5
+4. table `products`                     > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
+3. table `product_specification_names`  > add column `specification_type` type varchar 255
+4. table `sales_details`                > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
+5. table `sales_return`                 > add column `reason` type text
+4. table `stock`                        > add columns `entry_by` type int 5, `entry_user_type` type varchar 255
 
 New DB table:
 1. `weight_type`
@@ -86,15 +86,15 @@ super!@#man
 
 
 Banijjo:
-1) User Registration Problem (Remove all required Fields) [Done]
-2) Forget password (admin & front)
-3) user Profile page & update (Front)
-4) user name need to appear in the home page in the replacement of account and welcome to banijjo (front)
-5) feature category need to be show in the home page (front)
-6) image of the feature category parent (admin)
-7) SEO links (front)
-8) image can’t be download (front)
-9) help, terms & condition, privacy & policy, FAQ, Buyer Protection (admin, front)
+01) User Registration Problem (Remove all required Fields) [Done]
+02) Forget password (admin & front)
+03) user Profile page & update (Front)
+04) user name need to appear in the home page in the replacement of account and welcome to banijjo (front)
+05) feature category need to be show in the home page (front)
+06) image of the feature category parent (admin)
+07) SEO links (front)
+08) image can’t be download (front)
+09) help, terms & condition, privacy & policy, FAQ, Buyer Protection (admin, front)
 10) News, Blog (customer & admin) (front, admin)
 11) customer review (front, admin)
 13/07/2020=>
@@ -111,7 +111,7 @@ Banijjo:
 22) Product info and Purchase info.
 23) Stock Info (With new purchase from vendor).
 24) If product returned from the customer need to add a note section which will deliver to banijjo admin.
-25)  at the time of product entry, can’t create new line in the description and need the text area like doc file.
+25) at the time of product entry, can’t create new line in the description and need the text area like doc file.
 26) vendor can entry the child category but has to select the parent’s category.
 27) global specification system.
 28) recaptcha

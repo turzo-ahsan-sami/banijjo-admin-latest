@@ -325,7 +325,7 @@ class Products extends Component {
         return false;
       });
 
-    fetch(base + "/apiv2/product_specification_names", {
+    fetch(base + "/api/product_specification_names", {
       method: "GET",
     })
       .then((res) => {
@@ -641,7 +641,7 @@ class Products extends Component {
   }
 
   handleGetSize() {
-    fetch(base + "/apiv2/getSizeInfos", {
+    fetch(base + "/api/getSizeInfos", {
       method: "GET",
     })
       .then((res) => {
@@ -1886,7 +1886,7 @@ class Products extends Component {
 
             axios({
               method: "post",
-              url: base + "/apiv2/saveProduct",
+              url: base + "/api/saveProduct",
               data: data,
               headers: {
                 Accept: "application/json",

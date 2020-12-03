@@ -270,7 +270,7 @@ class Purchase extends Component {
         return false;
       });
 
-    fetch(base + "/apiv2/getSizeInfos", {
+    fetch(base + "/api/getSizeInfos", {
       method: "GET",
     })
       .then((res) => {
@@ -352,7 +352,7 @@ class Purchase extends Component {
     if (event.target.value != "") {
       fetch(
         base +
-          `/apiv2/search_products_for_purchase/?id=${
+          `/api/search_products_for_purchase/?id=${
             event.target.value
           }&vendorId=${this.state.supplierId}&user_type=${localStorage.getItem(
             "user_type"
@@ -427,7 +427,7 @@ class Purchase extends Component {
     });
 
     fetch(
-      base + `/apiv2/getSpecificationNamesValues/?id=${event.target.dataset.id}`,
+      base + `/api/getSpecificationNamesValues/?id=${event.target.dataset.id}`,
       {
         method: "GET",
         headers: { Authorization: "Atiq " + cookie.load("token") },
@@ -583,7 +583,7 @@ class Purchase extends Component {
     event.preventDefault();
     console.log(this.state);
 
-    fetch(base + "/apiv2/saveProductPurchase", {
+    fetch(base + "/api/saveProductPurchase", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -732,7 +732,7 @@ class Purchase extends Component {
 
     fetch(
       base +
-        `/apiv2/getPurchaseInfoForUpdate/?id=${event.currentTarget.dataset["editid"]}`,
+        `/api/getPurchaseInfoForUpdate/?id=${event.currentTarget.dataset["editid"]}`,
       {
         method: "GET",
         headers: {
@@ -811,7 +811,7 @@ class Purchase extends Component {
       console.log("confirmed clicked!");
       fetch(
         base +
-          `/apiv2/confirmPurchase/?id=${this.state.purchaseConfirmId}&employee_id=${this.state.employee_id}`,
+          `/api/confirmPurchase/?id=${this.state.purchaseConfirmId}&employee_id=${this.state.employee_id}`,
         {
           method: "GET",
           headers: { Authorization: "Atiq " + cookie.load("token") },

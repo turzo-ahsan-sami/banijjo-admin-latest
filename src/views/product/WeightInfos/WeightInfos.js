@@ -77,7 +77,7 @@ class WeightInfos extends Component {
   toggleSmall(event) {
     if (event == "Yes") {
       console.log("Permitted");
-      fetch(base + `/apiv2/deleteWeightInfo/?id=${this.state.weightId}`, {
+      fetch(base + `/api/deleteWeightInfo/?id=${this.state.weightId}`, {
         method: "GET",
         headers: { Authorization: "Atiq " + cookie.load("token") },
       })
@@ -137,7 +137,7 @@ class WeightInfos extends Component {
   }
 
   handleGet() {
-    fetch(base + "/apiv2/getWeightInfos", {
+    fetch(base + "/api/getWeightInfos", {
       method: "GET",
       headers: { Authorization: "Atiq " + cookie.load("token") },
     })
@@ -153,7 +153,7 @@ class WeightInfos extends Component {
         return false;
       });
 
-    fetch(base + "/apiv2/getWeightType", {
+    fetch(base + "/api/getWeightType", {
       method: "GET",
       headers: { Authorization: "Atiq " + cookie.load("token") },
     })
@@ -175,7 +175,7 @@ class WeightInfos extends Component {
     event.preventDefault();
 
     if (this.state.buttonPermittedFor == "submit") {
-      fetch(base + "/apiv2/saveWeightInfo", {
+      fetch(base + "/api/saveWeightInfo", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -216,7 +216,7 @@ class WeightInfos extends Component {
     } else {
       console.log("Permitted for update");
 
-      fetch(base + "/apiv2/editWeightInfos", {
+      fetch(base + "/api/editWeightInfos", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -303,7 +303,7 @@ class WeightInfos extends Component {
     });
 
     setTimeout(() => {
-      fetch(base + `/apiv2/getWeightInfoForUpdate/?id=${this.state.weightId}`, {
+      fetch(base + `/api/getWeightInfoForUpdate/?id=${this.state.weightId}`, {
         method: "GET",
         headers: { Authorization: "Atiq " + cookie.load("token") },
       })

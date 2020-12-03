@@ -77,7 +77,7 @@ class WeightType extends Component {
   toggleSmall(event) {
     if (event == "Yes") {
       console.log("Permitted");
-      fetch(base + `/apiv2/deleteWeightType/?id=${this.state.weightId}`, {
+      fetch(base + `/api/deleteWeightType/?id=${this.state.weightId}`, {
         method: "GET",
         headers: { Authorization: "Atiq " + cookie.load("token") },
       })
@@ -137,7 +137,7 @@ class WeightType extends Component {
   }
 
   handleGet() {
-    fetch(base + "/apiv2/getWeightType", {
+    fetch(base + "/api/getWeightType", {
       method: "GET",
       headers: { Authorization: "Atiq " + cookie.load("token") },
     })
@@ -157,7 +157,7 @@ class WeightType extends Component {
     event.preventDefault();
 
     if (this.state.buttonPermittedFor == "submit") {
-      fetch(base + "/apiv2/saveWeightType", {
+      fetch(base + "/api/saveWeightType", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -187,7 +187,7 @@ class WeightType extends Component {
           }
         });
     } else {
-      fetch(base + "/apiv2/editWeightType", {
+      fetch(base + "/api/editWeightType", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -263,7 +263,7 @@ class WeightType extends Component {
       buttonPermittedFor: "update",
     });
     setTimeout(() => {
-      fetch(base + `/apiv2/getWeightTypeForUpdate/?id=${this.state.weightId}`, {
+      fetch(base + `/api/getWeightTypeForUpdate/?id=${this.state.weightId}`, {
         method: "GET",
         headers: { Authorization: "Atiq " + cookie.load("token") },
       })

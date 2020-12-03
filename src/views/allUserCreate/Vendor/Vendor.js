@@ -37,6 +37,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
+
 const base = process.env.REACT_APP_ADMIN_SERVER_URL;
 const publicUrl = process.env.REACT_APP_PUBLIC_URL;
 // const FormData = require('form-data');
@@ -327,7 +328,7 @@ class Vendor extends Component {
       return res.json()
     })
     .then(vendors => {
-      console.log(vendors.data);
+      console.log('all vendors',vendors.data);
       this.setState({
         vendorList : vendors.data
       })
@@ -552,46 +553,46 @@ class Vendor extends Component {
 
   }
 
-  // handleSubmit (event) {
-  //   event.preventDefault();
-  //   console.log('submitted value : ', this.state);
-  //   console.log('submitted Image : ', this.state.image);
-  //   console.log('submitted Image value : ', this.state.pictures[0].path);
+  handleSubmit (event) {
+    event.preventDefault();
+    console.log('submitted value : ', this.state);
+    console.log('submitted Image : ', this.state.image);
+    console.log('submitted Image value : ', this.state.pictures[0].path);
 
-  //   // this.setState({
-  //   //   pictures: this.state.pictures.concat(this.state.image),
-  //   // });
+    // this.setState({
+    //   pictures: this.state.pictures.concat(this.state.image),
+    // });
 
-  //   console.log('submitted Picture value : ', this.state.pictures);
+    console.log('submitted Picture value : ', this.state.pictures);
 
-  //   fetch('/api/saveVendor' , {
-  //     method: "POST",
-  //     headers: {
-  //       'Content-type': 'application/json'
-  //     },
-  //     body: JSON.stringify(this.state)
-  //   })
-  //   .then((result) => result.json())
-  //   .then((info) => {
-  //     if (info.success == true) {
-  //       ToastsStore.success("Vendor Successfully inserted !!");
-  //       console.log(info.success);
-  //       setTimeout(
-  //         function() {
-  //         // this.props.history.push("/product/vendor");
-  //         window.location = '/product/vendor';
-  //         }
-  //         .bind(this),
-  //         3000
-  //       );
-  //     }
-  //     else {
-  //       ToastsStore.warning("Product Insertion Faild. Please try again !!");
-  //       console.log(info.success);
-  //     }
+    fetch('/api/saveVendor' , {
+      method: "POST",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    })
+    .then((result) => result.json())
+    .then((info) => {
+      if (info.success == true) {
+        ToastsStore.success("Vendor Successfully inserted !!");
+        console.log(info.success);
+        setTimeout(
+          function() {
+          // this.props.history.push("/product/vendor");
+          window.location = '/product/vendor';
+          }
+          .bind(this),
+          3000
+        );
+      }
+      else {
+        ToastsStore.warning("Product Insertion Faild. Please try again !!");
+        console.log(info.success);
+      }
 
-  //   })
-  // }
+    })
+  }
 
   handleUploadImage(ev) {
     ev.preventDefault();
@@ -858,13 +859,13 @@ class Vendor extends Component {
     return (
       <Row>
         <ToastsContainer store={ToastsStore}/>
-      {/*<Col xs="12" md="6">
+      <Col xs="12" md="4">
         <Card>
           <CardHeader>
             <strong>Add Vendor</strong>
           </CardHeader>
           <CardBody>
-            <Form  refs action="" method="post" encType="multipart/form-data" className="form-horizontal" onSubmit={this.handleUploadImage}  onChange={this.handleProductChange}>
+            <Form  refs="true" action="" method="post" encType="multipart/form-data" className="form-horizontal" onSubmit={this.handleUploadImage}  onChange={this.handleProductChange}>
               <FormGroup row>
                 <Col md="3">
                   <Label htmlFor="name">Vendor Name</Label>
@@ -911,21 +912,21 @@ class Vendor extends Component {
                     </Col>
               </FormGroup>
 
-              <FormGroup row>
+              {/* <FormGroup row>
                 <Col md="3">
                   <Label htmlFor="image">Vendor Image [previously it was commented]</Label>
                 </Col>
                 <Col xs="12" md="9">
                       <Input type="file" id="image" name="image" />
                     </Col>
-              </FormGroup> 
+              </FormGroup>  */}
 
               <FormGroup row>
                 <Col md="3">
                   <Label htmlFor="image">Vendor Image</Label>
                 </Col>
                 <Col xs="12" md="9">
-                    <label for="file-input" >
+                    <label htmlFor="file-input" >
                       <img style={{height: "60px", width: "60px"}} src={publicUrl+"/productFormatedImages/Asset3.png"}/>
                     </label>
 
@@ -935,7 +936,7 @@ class Vendor extends Component {
                 </Col>
               </FormGroup>
               <center>
-                <Button type="submit" size="sm" color="success" disabled><i className="fa fa-dot-circle-o" ></i> Submit</Button>&nbsp;
+                <Button type="submit" size="sm" color="success"><i className="fa fa-dot-circle-o" ></i> Submit</Button>&nbsp;
                 <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
               </center>
 
@@ -945,9 +946,9 @@ class Vendor extends Component {
 
           </CardFooter>
         </Card>
-      </Col>*/}
+      </Col>
 
-      <Col xs="12" lg="12">
+      <Col xs="12" md="8">
         <Card>
           <CardHeader>
             <i className="fa fa-align-justify"></i> Vendor List
@@ -991,7 +992,7 @@ class Vendor extends Component {
               <tbody>
               {
                 this.state.vendorList.map((vendorListValue, key) =>
-                <tr>
+                <tr key = {key}>
                   <td>{vendorListValue.name}</td>
                   <td>
                   {
@@ -1005,7 +1006,7 @@ class Vendor extends Component {
                   <td>{vendorListValue.website}</td>
                   <td>{vendorListValue.address}</td>
                   <td>
-                    {vendorListValue.status == 'active' ? <center> <i class="fa fa-check fa-lg" style={{color: '#009345'}}></i>  </center> : <center> <i class="fa fa-times fa-lg" style={{color: '#009345'}}></i> </center> }
+                    {vendorListValue.status == 'active' ? <center> <i className ="fa fa-check fa-lg" style={{color: '#009345'}}></i>  </center> : <center> <i className ="fa fa-times fa-lg" style={{color: '#009345'}}></i> </center> }
                   </td>
                   {
                   localStorage.user_type == 'super_admin' ?
@@ -1089,13 +1090,13 @@ class Vendor extends Component {
                       vendorListValue.step_completed == 'approved' ?
                       <center>
                         <a data-id={vendorListValue.id} data-clicked={'Unauthorize'} style={{cursor: 'pointer'}} title="Unauthorize" onClick={this.authorize.bind(this)}>
-                          <i class="fa fa-chevron-circle-left fa-lg" style={{color: '#009345'}}></i>
+                          <i className ="fa fa-chevron-circle-left fa-lg" style={{color: '#009345'}}></i>
                         </a>
                       </center>
                       :
                       <center>
                       <a data-id={vendorListValue.id} data-clicked={'Authorize'} style={{cursor: 'pointer'}} title="Authorize" onClick={this.authorize.bind(this)}>
-                        <i class="fa fa-chevron-circle-right fa-lg" style={{color: 'red'}}></i>
+                        <i className ="fa fa-chevron-circle-right fa-lg" style={{color: 'red'}}></i>
                       </a>
                     </center>
                     }
@@ -1108,13 +1109,13 @@ class Vendor extends Component {
                       vendorListValue.step_completed == 'approved' ?
                       <center>
                         <a data-id={vendorListValue.id} data-clicked={'Unauthorize'} style={{cursor: 'pointer'}} title="Unauthorize" onClick={this.authorize.bind(this)}>
-                          <i class="fa fa-chevron-circle-left fa-lg" style={{color: '#009345'}}></i>
+                          <i className ="fa fa-chevron-circle-left fa-lg" style={{color: '#009345'}}></i>
                         </a>
                       </center>
                       :
                       <center>
                       <a data-id={vendorListValue.id} data-clicked={'Authorize'} style={{cursor: 'pointer'}} title="Authorize" onClick={this.authorize.bind(this)}>
-                        <i class="fa fa-chevron-circle-right fa-lg" style={{color: 'red'}}></i>
+                        <i className ="fa fa-chevron-circle-right fa-lg" style={{color: 'red'}}></i>
                       </a>
                     </center>
                     }
@@ -1129,9 +1130,7 @@ class Vendor extends Component {
             </Table>
             <Pagination>
               <PaginationItem><PaginationLink previous tag="button">Prev</PaginationLink></PaginationItem>
-              <PaginationItem active>
-                <PaginationLink tag="button">1</PaginationLink>
-              </PaginationItem>
+              <PaginationItem active><PaginationLink tag="button">1</PaginationLink></PaginationItem>
               <PaginationItem className="page-item"><PaginationLink tag="button">2</PaginationLink></PaginationItem>
               <PaginationItem><PaginationLink tag="button">3</PaginationLink></PaginationItem>
               <PaginationItem><PaginationLink tag="button">4</PaginationLink></PaginationItem>
@@ -1325,8 +1324,7 @@ class Vendor extends Component {
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={this.state.large} toggle={this.toggleLarge}
-             className={'modal-lg ' + this.props.className}>
+      <Modal isOpen={this.state.large} toggle={this.toggleLarge} className={'modal-lg ' + this.props.className}>
         <ModalHeader toggle={this.toggleLarge}>Edit Vendor Infos</ModalHeader>
         <ToastsContainer store={ToastsStore}/>
         <ModalBody>

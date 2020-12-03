@@ -530,7 +530,7 @@ class SalesReturn extends Component {
     console.log(this.state);
     event.preventDefault();
 
-    fetch(base+'/apiv2/saveSalesReturn' , {
+    fetch(base+'/api/saveSalesReturn' , {
       method: "POST",
       headers: {
         'Content-type': 'application/json',

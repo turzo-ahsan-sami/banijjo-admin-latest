@@ -180,7 +180,7 @@ class PurchaseReturn extends Component {
     console.log('states : ', this.state);
     if (event == 'Yes') {
       console.log('confirmed clicked!');
-      fetch(base+`/apiv2/confirmPurchaseReturn/?id=${this.state.purchaseConfirmId}&employee_id=${this.state.employee_id}`, {
+      fetch(base+`/api/confirmPurchaseReturn/?id=${this.state.purchaseConfirmId}&employee_id=${this.state.employee_id}`, {
         method: 'GET',
         headers: {'Authorization': 'Atiq '+cookie.load('token')}
       })
@@ -418,7 +418,7 @@ class PurchaseReturn extends Component {
       ['id']: event.target.dataset.id
     });
 
-    fetch(base+`/apiv2/getSpecificationNamesValues/?id=${event.target.dataset.id}`, {
+    fetch(base+`/api/getSpecificationNamesValues/?id=${event.target.dataset.id}`, {
       method: 'GET',
       headers: {'Authorization': 'Atiq '+cookie.load('token')}
     })
@@ -611,7 +611,7 @@ class PurchaseReturn extends Component {
   }
 
   handlePurchaseReturnList () {
-    fetch(base+`/apiv2/purchase_return_list/?id=${this.state.returnedBy}&type=${this.state.userType}`, {
+    fetch(base+`/api/purchase_return_list/?id=${this.state.returnedBy}&type=${this.state.userType}`, {
       method: 'GET'
     })
     .then(res => {
@@ -727,7 +727,7 @@ class PurchaseReturn extends Component {
 
     if (this.state.isUpdateClicked == false) {
       // purchase reurn save
-      fetch(base+'/apiv2/saveProductPurchaseReturn' , {
+      fetch(base+'/api/saveProductPurchaseReturn' , {
         method: "POST",
         headers: {
           'Content-type': 'application/json',
@@ -917,7 +917,7 @@ class PurchaseReturn extends Component {
       isUpdateClicked : true,
     })
 
-    fetch(base+`/apiv2/getPurchaseReturnInfoForUpdate/?id=${event.currentTarget.dataset['editid']}`, {
+    fetch(base+`/api/getPurchaseReturnInfoForUpdate/?id=${event.currentTarget.dataset['editid']}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',

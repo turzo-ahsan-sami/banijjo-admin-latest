@@ -214,6 +214,7 @@ class Login extends Component {
         localStorage.setItem('employee_id', info.session.employee_id);
         localStorage.setItem('user_type', info.session.user_type);
         localStorage.setItem('token', info.token);
+        localStorage.setItem('lastLoginDate', Date.now());
 
         console.log('Token : ', info.token);
         console.log(localStorage.user_status);
